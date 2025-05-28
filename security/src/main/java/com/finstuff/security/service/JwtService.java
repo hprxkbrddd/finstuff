@@ -1,6 +1,5 @@
 package com.finstuff.security.service;
 
-import com.finstuff.security.entity.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
