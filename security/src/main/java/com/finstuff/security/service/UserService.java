@@ -1,5 +1,6 @@
 package com.finstuff.security.service;
 
+import com.finstuff.security.dto.AuthDTO;
 import com.finstuff.security.dto.UsersDTO;
 import com.finstuff.security.entity.Users;
 import com.finstuff.security.repository.UsersRepository;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class UserService {
 
     private final UsersRepository repo;
@@ -22,10 +23,14 @@ public class UserService {
 
     public Users register (String username, String password, String name){
         password = new BCryptPasswordEncoder(12).encode(password);
-        return repo.save(new Users(username, password, name, List.of("USER")));
+        Users user = new Users();
+        user.setUsername(username);
+        user.setHashedPassword(password);
+        user.setName(name);
+        return repo.save(user);
     }
 
-    public String verify (UsersDTO users){
+    public String verify (AuthDTO users){
         Authentication auth =
                 authManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -34,6 +39,10 @@ public class UserService {
                         )
                 );
         return auth.isAuthenticated() ? jwtService.generateToken(users.username()) : "Failure";
+    }
+
+    public List<Users> getAll(){
+        return repo.findAll();
     }
 }
 

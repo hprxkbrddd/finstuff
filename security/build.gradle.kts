@@ -28,6 +28,8 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	compileOnly("org.projectlombok:lombok:1.18.38")
+	annotationProcessor("org.projectlombok:lombok:1.18.38")
+	implementation("com.vladmihalcea:hibernate-types-60:2.21.1")
 	implementation("io.jsonwebtoken:jjwt:0.12.6")
 }
 
