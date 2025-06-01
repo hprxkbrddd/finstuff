@@ -3,8 +3,11 @@ package com.finstuff.security.controller;
 import com.finstuff.security.dto.AuthDTO;
 import com.finstuff.security.dto.UsersDTO;
 import com.finstuff.security.entity.Users;
+import com.finstuff.security.service.RabbitMQProducer;
 import com.finstuff.security.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.List;
 public class SecurityController {
 
     private final UserService service;
+    private final RabbitMQProducer producer;
 
     @PostMapping("/register")
     public Users register (@RequestBody UsersDTO dto){
@@ -22,8 +26,9 @@ public class SecurityController {
     }
 
     @GetMapping("/login")
-    public String login (@RequestBody AuthDTO dto){
-        return service.verify(dto);
+    public ResponseEntity<String> login (@RequestBody AuthDTO dto){
+        producer.sendMsg(service.verify(dto));
+        return new ResponseEntity<>(service.verify(dto), HttpStatus.OK);
     }
 
     @GetMapping("/getAll")

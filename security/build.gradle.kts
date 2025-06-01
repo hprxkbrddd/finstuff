@@ -31,6 +31,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok:1.18.38")
 	implementation("com.vladmihalcea:hibernate-types-60:2.21.1")
 	implementation("io.jsonwebtoken:jjwt:0.12.6")
+	implementation("org.springframework.amqp:spring-rabbit:4.0.0-M2")
 }
 
 tasks.withType<Test> {
