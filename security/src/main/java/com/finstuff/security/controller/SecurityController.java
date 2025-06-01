@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/finstuff/security")
+@RequestMapping("finstuff/v1/security")
 public class SecurityController {
 
     private final UserService service;
