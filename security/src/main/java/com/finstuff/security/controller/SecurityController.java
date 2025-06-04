@@ -3,6 +3,7 @@ package com.finstuff.security.controller;
 import com.finstuff.security.dto.AuthDTO;
 import com.finstuff.security.dto.UsersDTO;
 import com.finstuff.security.entity.Users;
+import com.finstuff.security.service.JwtService;
 import com.finstuff.security.service.RabbitMQProducer;
 import com.finstuff.security.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class SecurityController {
         return service.register(dto.username(), dto.password(), dto.name());
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<String> login (@RequestBody AuthDTO dto){
         producer.sendMsg(service.verify(dto));
         return new ResponseEntity<>(service.verify(dto), HttpStatus.OK);
@@ -33,6 +34,7 @@ public class SecurityController {
 
     @GetMapping("/getAll")
     public List<Users> getAll(){
+        producer.sendMsg(service.getAll().toString());
         return service.getAll();
     }
 }

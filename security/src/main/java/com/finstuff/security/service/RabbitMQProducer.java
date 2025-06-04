@@ -13,7 +13,7 @@ public class RabbitMQProducer {
     String exchange;
 
     @Value("${rabbitmq.routing-key.name}")
-    private String routingKey;
+    String routingKey;
 
     private final RabbitTemplate rabbitTemplate;
 
