@@ -37,6 +37,7 @@ dependencies {
 	testImplementation("org.springframework.amqp:spring-rabbit-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springframework.amqp:spring-rabbit:4.0.0-M2")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
 }
 
 tasks.withType<Test> {
