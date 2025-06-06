@@ -2,6 +2,7 @@ package com.finstuff.repository.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import java.util.List;
@@ -9,12 +10,12 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Account {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
-    private final String title;
-    private final Long ownedByUserId;
+    private Long id;
+    private String title;
+    private Long ownedByUserId;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
