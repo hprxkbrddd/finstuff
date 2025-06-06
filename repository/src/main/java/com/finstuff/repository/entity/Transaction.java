@@ -20,6 +20,6 @@ public class Transaction {
     private final BigDecimal amount;
     private final LocalDateTime timestamp;
     @ManyToOne
-    @JoinColumn(name = "transaction_id")
+    @JoinColumn(name = "account_id")
     private final Account account;
 }
