@@ -2,24 +2,28 @@ package com.finstuff.repository.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Getter
+@Setter
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
-    private final String title;
-    private final Boolean income;
-    private final BigDecimal amount;
-    private final LocalDateTime timestamp;
+    private Long id;
+    private String title;
+    private Boolean income;
+    private BigDecimal amount;
+    private LocalDateTime timestamp;
+
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private final Account account;
+    private Account account;
 }
