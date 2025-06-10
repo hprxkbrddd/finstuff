@@ -4,6 +4,7 @@ import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.repository.TransactionsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,24 +31,22 @@ public class TransactionService {
                            Long accountId){
         Transaction transaction = new Transaction();
         transaction.setTitle(title);
-        transaction.setIncome(income);
         transaction.setAmount(amount);
+        transaction.setAccountId(accountId);
         transaction.setTimestamp(LocalDateTime.now());
         return transactionsRepository.save(transaction);
     }
 
-    public boolean updateTitle(Long id, String title){
+    @Transactional
+    public int updateTitle(Long id, String title){
         return transactionsRepository.updateTitle(id, title);
     }
 
-    public boolean updateIncome(Long id, Boolean income){
-        return transactionsRepository.updateIncome(id, income);
-    }
-
-    public boolean updateAmount(Long id, BigDecimal amount){
+    @Transactional
+    public int updateAmount(Long id, BigDecimal amount){
         return transactionsRepository.updateAmount(id, amount);
     }
-
+    @Transactional
     public boolean delete(Long id){
         if (transactionsRepository.findById(id).isEmpty()) return false;
         transactionsRepository.deleteById(id);

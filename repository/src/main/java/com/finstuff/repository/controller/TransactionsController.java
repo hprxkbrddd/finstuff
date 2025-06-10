@@ -84,24 +84,9 @@ public class TransactionsController {
     )
     @PutMapping("/update-title")
     public ResponseEntity<String> updateTitle(@RequestBody TitleUpdateDTO dto){
-        return service.updateTitle(dto.id(), dto.title())?
+        return service.updateTitle(dto.id(), dto.title()) == 1?
                 new ResponseEntity<>("Title has been updated to '"+dto.title()+"'", HttpStatus.OK):
                 new ResponseEntity<>("Title has not been updated", HttpStatus.NOT_FOUND);
-    }
-
-    @Operation(
-            summary = "Update income",
-            description = "Updates income of the transaction",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Success"),
-                    @ApiResponse(responseCode = "404", description = "No transaction in db")
-            }
-    )
-    @PutMapping("/update-income")
-    public ResponseEntity<String> updateIncome(@RequestBody IncomeUpdateDTO dto){
-        return service.updateIncome(dto.id(), dto.income())?
-                new ResponseEntity<>("Income has been updated to '"+dto.income()+"'", HttpStatus.OK):
-                new ResponseEntity<>("Income has not been updated", HttpStatus.NOT_FOUND);
     }
 
     @Operation(
@@ -114,7 +99,7 @@ public class TransactionsController {
     )
     @PutMapping("/update-amount")
     public ResponseEntity<String> updateTitle(@RequestBody AmountUpdateDTO dto){
-        return service.updateAmount(dto.id(), dto.amount())?
+        return service.updateAmount(dto.id(), dto.amount()) == 1?
                 new ResponseEntity<>("Amount has been updated to '"+dto.amount()+"'", HttpStatus.OK):
                 new ResponseEntity<>("Amount has not been updated", HttpStatus.NOT_FOUND);
     }
@@ -127,7 +112,7 @@ public class TransactionsController {
                     @ApiResponse(responseCode = "404", description = "No transaction in db")
             }
     )
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){
         return service.delete(id)?
                 new ResponseEntity<>("Transaction-id:"+id+" has been deleted", HttpStatus.OK):

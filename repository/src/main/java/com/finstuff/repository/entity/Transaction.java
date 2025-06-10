@@ -19,11 +19,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private Boolean income;
     private BigDecimal amount;
     private LocalDateTime timestamp;
-
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+    private Long accountId;
 }

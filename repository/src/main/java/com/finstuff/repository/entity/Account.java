@@ -17,6 +17,6 @@ public class Account {
     private String title;
     private Long ownedByUserId;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "accountId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
 }
