@@ -3,7 +3,6 @@ package com.finstuff.security.controller;
 import com.finstuff.security.dto.AuthDTO;
 import com.finstuff.security.dto.UsersDTO;
 import com.finstuff.security.entity.Users;
-import com.finstuff.security.service.JwtService;
 import com.finstuff.security.service.RabbitMQProducer;
 import com.finstuff.security.service.UserService;
 import lombok.RequiredArgsConstructor;

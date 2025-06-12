@@ -44,5 +44,9 @@ public class UserService {
     public List<Users> getAll(){
         return repo.findAll();
     }
+
+    public boolean validateToken(String token){
+
+    }
 }
 

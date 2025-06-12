@@ -1,7 +1,6 @@
 package com.finstuff.repository.controller;
 
 import com.finstuff.repository.dto.AmountUpdateDTO;
-import com.finstuff.repository.dto.IncomeUpdateDTO;
 import com.finstuff.repository.dto.TitleUpdateDTO;
 import com.finstuff.repository.dto.TransactionDTO;
 import com.finstuff.repository.entity.Transaction;

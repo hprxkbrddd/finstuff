@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: security2
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/finstuff
+  datasource:
+    url: jdbc:postgresql://localhost:5432/nikitas_db
+    username: postgres
+    password: postgres
+
+server:
+  port: 8081
