@@ -11,5 +11,7 @@ spring:
     username: postgres
     password: postgres
 
-server:
+server: 
   port: 8081
+
+jwkSetUri: http://localhost:8080/realms/finstuff/protocol/openid-connect/certs
