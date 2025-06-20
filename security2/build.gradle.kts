@@ -20,13 +20,15 @@ repositories {
 dependencies {
 //	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	// https://mvnrepository.com/artifact/org.projectlombok/lombok
 	implementation("org.projectlombok:lombok:0.11.0")
+	implementation("org.keycloak:keycloak-spring-boot-starter:25.0.3")
+	implementation("org.keycloak:keycloak-admin-client:26.0.5")
 }
 
 tasks.withType<Test> {

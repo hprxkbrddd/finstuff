@@ -6,12 +6,29 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/finstuff
+          jwk-set-uri: http://localhost:8080/realms/finstuff/protocol/openid-connect/certs
+      client:
+        registration:
+          keycloak:
+            client-id: ${CLIENT_ID:finstuff-client}
+            client-secret: ${CLIENT_SECRET:your-client-secret}
+            authorization-grant-type: authorization_code
+            scope: openid,profile,email
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/finstuff
+            user-name-attribute: preferred_username
   datasource:
     url: jdbc:postgresql://localhost:5432/nikitas_db
     username: postgres
     password: postgres
 
-server: 
+server:
   port: 8081
 
-jwkSetUri: http://localhost:8080/realms/finstuff/protocol/openid-connect/certs
+# Дополнительные настройки Keycloak (если нужен доступ к Admin API)
+keycloak:
+  auth-server-url: http://localhost:8080
+  realm: finstuff
+#jwkSetUri: http://localhost:8080/realms/finstuff/protocol/openid-connect/certs
