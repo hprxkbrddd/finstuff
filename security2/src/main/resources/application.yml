@@ -11,7 +11,7 @@ spring:
         registration:
           keycloak:
             client-id: ${CLIENT_ID:finstuff-client}
-            client-secret: ${CLIENT_SECRET:your-client-secret}
+            client-secret: ${CLIENT_SECRET:YmFBU5Dasp73l64gbFFAFinslryKSWcW}
             authorization-grant-type: authorization_code
             scope: openid,profile,email
             redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
@@ -28,7 +28,7 @@ server:
   port: 8081
 
 # Дополнительные настройки Keycloak (если нужен доступ к Admin API)
-keycloak:
-  auth-server-url: http://localhost:8080
-  realm: finstuff
+#keycloak:
+#  auth-server-url: http://localhost:8080
+#  realm: finstuff
 #jwkSetUri: http://localhost:8080/realms/finstuff/protocol/openid-connect/certs

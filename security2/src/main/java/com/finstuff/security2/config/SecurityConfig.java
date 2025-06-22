@@ -25,9 +25,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests(request ->{
-                            request.anyRequest().authenticated();
-
+                .authorizeHttpRequests(request ->{request
+                        .requestMatchers("/finstuff/v1/keycloak/token").permitAll()
+                        .anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 ->
                     oauth2.userInfoEndpoint(userInfo ->
