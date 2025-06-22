@@ -58,7 +58,7 @@ public class AccountsController {
             }
     )
     @GetMapping("/get-by-owner/{ownerId}")
-    public ResponseEntity<List<Account>> getByOwnerId(@PathVariable Long ownerId){
+    public ResponseEntity<List<Account>> getByOwnerId(@PathVariable String ownerId){
         List<Account> accounts = service.getByOwnerId(ownerId);
         return new ResponseEntity<>(accounts,
                 accounts.isEmpty() ?

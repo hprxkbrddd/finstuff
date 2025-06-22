@@ -18,7 +18,7 @@ public class AccountService {
         return accountsRepository.findAll();
     }
 
-    public Account addAccount(String title, Long ownedByUserId){
+    public Account addAccount(String title, String ownedByUserId){
         Account account = new Account();
         account.setTitle(title);
         account.setOwnedByUserId(ownedByUserId);
@@ -30,7 +30,7 @@ public class AccountService {
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-"+id+" is not found"));
     }
 
-    public List<Account> getByOwnerId(Long ownerId){
+    public List<Account> getByOwnerId(String ownerId){
         return accountsRepository.findByOwnedByUserId(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException("Owner:id-"+ownerId+" is not found"));
     }

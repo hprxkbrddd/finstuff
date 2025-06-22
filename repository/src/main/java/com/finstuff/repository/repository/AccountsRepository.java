@@ -19,5 +19,5 @@ public interface AccountsRepository extends JpaRepository<Account, Long> {
     @Query("UPDATE Account a SET a.title = :newValue WHERE a.id = :id")
     void updateTitle(@Param("id") Long id, @Param("newValue") String newValue);
 
-    Optional<List<Account>> findByOwnedByUserId(Long ownedByUserId);
+    Optional<List<Account>> findByOwnedByUserId(String ownedByUserId);
 }

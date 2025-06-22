@@ -15,7 +15,7 @@ public class Account {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private Long ownedByUserId;
+    private String ownedByUserId;
 
     @OneToMany(mappedBy = "accountId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
