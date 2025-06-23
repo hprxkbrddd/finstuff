@@ -6,16 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-//    @Value("${jwkSetUri}")
-//    private String jwkSetUri;
 
     @Autowired
     private JwtConverter converter;
@@ -25,6 +24,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .csrf(AbstractHttpConfigurer::disable) // Отключить CSRF для API
                 .authorizeHttpRequests(request ->{request
                         .requestMatchers("/finstuff/v1/keycloak/token").permitAll()
                         .anyRequest().authenticated();
@@ -35,7 +35,6 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(
                         jwt -> {
-//                            jwt.jwkSetUri(jwkSetUri);
                             jwt.jwtAuthenticationConverter(converter);
                         }
                 ))
