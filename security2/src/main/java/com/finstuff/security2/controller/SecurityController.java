@@ -1,5 +1,6 @@
 package com.finstuff.security2.controller;
 
+import com.finstuff.security2.dto.AccountDTO;
 import com.finstuff.security2.dto.AuthDTO;
 import com.finstuff.security2.service.SecurityService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @EnableMethodSecurity
@@ -33,6 +36,11 @@ public class SecurityController {
         return securityService.getToken(dto.username(), dto.password())
                 .map(tokenResponse -> ResponseEntity.ok(tokenResponse.access_token()));
     }
+
+//    @GetMapping("/accounts")
+//    public List<AccountDTO> getAccounts(@RequestHeader("Authorization") String token){
+//
+//    }
 
     @GetMapping("/hello")
     public ResponseEntity<String> helloWorld(Authentication authentication ){
