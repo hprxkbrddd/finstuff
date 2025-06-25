@@ -1,5 +1,6 @@
 package com.finstuff.repository.service;
 
+import com.finstuff.repository.dto.AccountDTO;
 import com.finstuff.repository.entity.Account;
 import com.finstuff.repository.repository.AccountsRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,9 +31,16 @@ public class AccountService {
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-"+id+" is not found"));
     }
 
-    public List<Account> getByOwnerId(String ownerId){
-        return accountsRepository.findByOwnedByUserId(ownerId)
+    public List<AccountDTO> getByOwnerId(String ownerId){
+        List<Account> accounts = accountsRepository.findByOwnedByUserId(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException("Owner:id-"+ownerId+" is not found"));
+        return accounts.stream().map(acc ->
+                new AccountDTO(
+                        acc.getId(),
+                        acc.getTitle(),
+                        acc.getOwnedByUserId()
+                )
+        ).toList();
     }
 
     @Transactional

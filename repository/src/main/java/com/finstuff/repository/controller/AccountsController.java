@@ -1,7 +1,9 @@
 package com.finstuff.repository.controller;
 
 import com.finstuff.repository.dto.AccountDTO;
+import com.finstuff.repository.dto.NewAccountDTO;
 import com.finstuff.repository.dto.TitleUpdateDTO;
+import com.finstuff.repository.dto.UserAccountsDTO;
 import com.finstuff.repository.entity.Account;
 import com.finstuff.repository.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,10 +60,10 @@ public class AccountsController {
             }
     )
     @GetMapping("/get-by-owner/{ownerId}")
-    public ResponseEntity<List<Account>> getByOwnerId(@PathVariable String ownerId){
-        List<Account> accounts = service.getByOwnerId(ownerId);
+    public ResponseEntity<UserAccountsDTO> getByOwnerId(@PathVariable String ownerId){
+        UserAccountsDTO accounts = new UserAccountsDTO(service.getByOwnerId(ownerId));
         return new ResponseEntity<>(accounts,
-                accounts.isEmpty() ?
+                accounts.accountList().isEmpty() ?
                 HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
@@ -73,7 +75,7 @@ public class AccountsController {
             }
     )
     @PostMapping("/add")
-    public ResponseEntity<Account> addAccount(@RequestBody AccountDTO dto){
+    public ResponseEntity<Account> addAccount(@RequestBody NewAccountDTO dto){
         return new ResponseEntity<>(service.addAccount(dto.title(), dto.ownedByUserId()), HttpStatus.CREATED);
     }
 
