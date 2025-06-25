@@ -2,6 +2,7 @@ package com.finstuff.security2.controller;
 
 import com.finstuff.security2.dto.AccountDTO;
 import com.finstuff.security2.dto.AuthDTO;
+import com.finstuff.security2.dto.UserAccountsDTO;
 import com.finstuff.security2.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -37,10 +38,11 @@ public class SecurityController {
                 .map(tokenResponse -> ResponseEntity.ok(tokenResponse.access_token()));
     }
 
-//    @GetMapping("/accounts")
-//    public List<AccountDTO> getAccounts(@RequestHeader("Authorization") String token){
-//
-//    }
+    @GetMapping("/accounts")
+    public Mono<ResponseEntity<List<AccountDTO>>> getAccounts(@RequestHeader("Authorization") String token){
+        return securityService.getAccounts(token.substring(7))
+                .map(accounts -> ResponseEntity.ok(accounts.accountList()));
+    }
 
     @GetMapping("/hello")
     public ResponseEntity<String> helloWorld(Authentication authentication ){
