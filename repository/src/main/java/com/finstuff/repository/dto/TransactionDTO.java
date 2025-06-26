@@ -5,5 +5,5 @@ import java.math.BigDecimal;
 public record TransactionDTO(
         String title,
         BigDecimal amount,
-        Long accountId)
+        String accountId)
 {}

@@ -18,5 +18,5 @@ public class Transaction {
     private String title;
     private BigDecimal amount;
     private LocalDateTime timestamp;
-    private Long accountId;
+    private String accountId;
 }

@@ -28,7 +28,7 @@ public class TransactionService {
 
     public Transaction add(String title,
                            BigDecimal amount,
-                           Long accountId){
+                           String accountId){
         Transaction transaction = new Transaction();
         transaction.setId(IdGenerator.generateId());
         transaction.setTitle(title);
