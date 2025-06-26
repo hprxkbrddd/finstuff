@@ -38,7 +38,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public int updateTitle(Long id, String title){
+    public int updateTitle(String id, String title){
         return transactionsRepository.updateTitle(id, title);
     }
 

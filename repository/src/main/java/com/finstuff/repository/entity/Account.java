@@ -11,8 +11,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Account {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id
+    private String id;
     private String title;
     private String ownedByUserId;
 

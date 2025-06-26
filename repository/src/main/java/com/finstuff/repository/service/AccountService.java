@@ -1,5 +1,6 @@
 package com.finstuff.repository.service;
 
+import com.finstuff.repository.component.IdGenerator;
 import com.finstuff.repository.dto.AccountDTO;
 import com.finstuff.repository.entity.Account;
 import com.finstuff.repository.repository.AccountsRepository;
@@ -21,12 +22,13 @@ public class AccountService {
 
     public Account addAccount(String title, String ownedByUserId){
         Account account = new Account();
+        account.setId(IdGenerator.generateId());
         account.setTitle(title);
         account.setOwnedByUserId(ownedByUserId);
         return accountsRepository.save(account);
     }
 
-    public Account getById(Long id){
+    public Account getById(String id){
         return accountsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-"+id+" is not found"));
     }
@@ -44,13 +46,13 @@ public class AccountService {
     }
 
     @Transactional
-    public Account updateTitle(Long id, String title){
+    public Account updateTitle(String id, String title){
         accountsRepository.updateTitle(id, title);
         return accountsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-"+id+" is not found. Title is not updated"));
     }
 
-    public String deleteAccount(Long id){
+    public String deleteAccount(String id){
         accountsRepository.deleteById(id);
         return "Account with id: "+id+" has been deleted";
     }

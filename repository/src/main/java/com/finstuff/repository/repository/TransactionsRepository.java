@@ -12,7 +12,7 @@ public interface TransactionsRepository extends JpaRepository<Transaction, Long>
 
     @Modifying
     @Query("UPDATE Transaction t SET t.title = :newValue WHERE t.id = :id")
-    int updateTitle(@Param("id") Long id, @Param("newValue") String newValue);
+    int updateTitle(@Param("id") String id, @Param("newValue") String newValue);
 
     @Modifying
     @Query("UPDATE Transaction t SET t.amount = :newValue WHERE t.id = :id")

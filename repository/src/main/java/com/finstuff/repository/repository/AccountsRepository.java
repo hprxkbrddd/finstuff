@@ -10,14 +10,14 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface AccountsRepository extends JpaRepository<Account, Long> {
+public interface AccountsRepository extends JpaRepository<Account, String> {
 
     @Query("SELECT a.transactions FROM Account a WHERE a.id = :accountId")
     Optional<List<Transaction>> getAccountTransactions(@Param("accountId") Long accountId);
 
     @Modifying
     @Query("UPDATE Account a SET a.title = :newValue WHERE a.id = :id")
-    void updateTitle(@Param("id") Long id, @Param("newValue") String newValue);
+    void updateTitle(@Param("id") String id, @Param("newValue") String newValue);
 
     Optional<List<Account>> findByOwnedByUserId(String ownedByUserId);
 }

@@ -47,7 +47,7 @@ public class AccountsController {
             }
     )
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<Account> getById(@PathVariable Long id){
+    public ResponseEntity<Account> getById(@PathVariable String id){
         return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
     }
 
@@ -99,7 +99,7 @@ public class AccountsController {
             }
     )
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable String id){
         return new ResponseEntity<>(service.deleteAccount(id), HttpStatus.OK);
     }
 }
