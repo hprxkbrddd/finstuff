@@ -1,5 +1,6 @@
 package com.finstuff.repository.service;
 
+import com.finstuff.repository.component.IdGenerator;
 import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.repository.TransactionsRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +22,15 @@ public class TransactionService {
         return transactionsRepository.findAll();
     }
 
-    public Optional<Transaction> getById(Long id){
+    public Optional<Transaction> getById(String id){
         return transactionsRepository.findById(id);
     }
 
     public Transaction add(String title,
-                           Boolean income,
                            BigDecimal amount,
                            Long accountId){
         Transaction transaction = new Transaction();
+        transaction.setId(IdGenerator.generateId());
         transaction.setTitle(title);
         transaction.setAmount(amount);
         transaction.setAccountId(accountId);
@@ -43,11 +44,12 @@ public class TransactionService {
     }
 
     @Transactional
-    public int updateAmount(Long id, BigDecimal amount){
+    public int updateAmount(String id, BigDecimal amount){
         return transactionsRepository.updateAmount(id, amount);
     }
+
     @Transactional
-    public boolean delete(Long id){
+    public boolean delete(String id){
         if (transactionsRepository.findById(id).isEmpty()) return false;
         transactionsRepository.deleteById(id);
         return true;

@@ -47,7 +47,7 @@ public class TransactionsController {
             }
     )
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<Transaction> getById(@PathVariable Long id){
+    public ResponseEntity<Transaction> getById(@PathVariable String id){
         Optional<Transaction> transaction = service.getById(id);
         return transaction.map(
                 value -> new ResponseEntity<>(value, HttpStatus.OK))
@@ -66,7 +66,6 @@ public class TransactionsController {
         return new ResponseEntity<>(
                 service.add(
                         dto.title(),
-                        dto.income(),
                         dto.amount(),
                         dto.accountId()
                 ),
@@ -112,7 +111,7 @@ public class TransactionsController {
             }
     )
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id){
+    public ResponseEntity<String> delete(@PathVariable String id){
         return service.delete(id)?
                 new ResponseEntity<>("Transaction-id:"+id+" has been deleted", HttpStatus.OK):
                 new ResponseEntity<>("Transaction-id:"+id+" has not been deleted", HttpStatus.NOT_FOUND);
