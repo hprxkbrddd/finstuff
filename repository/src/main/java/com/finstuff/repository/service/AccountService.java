@@ -39,8 +39,7 @@ public class AccountService {
         return accounts.stream().map(acc ->
                 new AccountDTO(
                         acc.getId(),
-                        acc.getTitle(),
-                        acc.getOwnedByUserId()
+                        acc.getTitle()
                 )
         ).toList();
     }
