@@ -1,9 +1,6 @@
 package com.finstuff.repository.controller;
 
-import com.finstuff.repository.dto.AccountDTO;
-import com.finstuff.repository.dto.NewAccountDTO;
-import com.finstuff.repository.dto.TitleUpdateDTO;
-import com.finstuff.repository.dto.UserAccountsDTO;
+import com.finstuff.repository.dto.*;
 import com.finstuff.repository.entity.Account;
 import com.finstuff.repository.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -22,7 +20,6 @@ import java.util.List;
 @Tag(name = "Accounts Controller", description = "Operations pertaining to accounts")
 public class AccountsController {
     private final AccountService service;
-
 
     @Operation(
             summary = "Get all accounts",
@@ -47,7 +44,7 @@ public class AccountsController {
             }
     )
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<Account> getById(@PathVariable String id){
+    public ResponseEntity<AccountEnlargedDTO> getById(@PathVariable String id){
         return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
     }
 

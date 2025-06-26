@@ -2,7 +2,7 @@ package com.finstuff.repository.controller;
 
 import com.finstuff.repository.dto.AmountUpdateDTO;
 import com.finstuff.repository.dto.TitleUpdateDTO;
-import com.finstuff.repository.dto.TransactionDTO;
+import com.finstuff.repository.dto.NewTransactionDTO;
 import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +62,7 @@ public class TransactionsController {
             }
     )
     @PostMapping("/add")
-    public ResponseEntity<Transaction> add(@RequestBody TransactionDTO dto){
+    public ResponseEntity<Transaction> add(@RequestBody NewTransactionDTO dto){
         return new ResponseEntity<>(
                 service.add(
                         dto.title(),

@@ -7,8 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public interface TransactionsRepository extends JpaRepository<Transaction, String> {
+
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.accountId = :accountId")
+    Optional<BigDecimal> getAccountBalance(@Param("accountId") String accountId);
 
     @Modifying
     @Query("UPDATE Transaction t SET t.title = :newValue WHERE t.id = :id")
