@@ -4,6 +4,7 @@ import com.finstuff.repository.component.IdGenerator;
 import com.finstuff.repository.dto.AccountDTO;
 import com.finstuff.repository.dto.AccountEnlargedDTO;
 import com.finstuff.repository.dto.TransactionDTO;
+import com.finstuff.repository.dto.UserAccountsDTO;
 import com.finstuff.repository.entity.Account;
 import com.finstuff.repository.repository.AccountsRepository;
 import com.finstuff.repository.repository.TransactionsRepository;
@@ -21,16 +22,28 @@ public class AccountService {
     private final AccountsRepository accountsRepository;
     private final TransactionsRepository transactionsRepository;
 
-    public List<Account> getAll(){
-        return accountsRepository.findAll();
+    public UserAccountsDTO getAll(){
+        return new UserAccountsDTO(accountsRepository.findAll()
+                .stream().map(acc ->
+                        new AccountDTO(
+                                acc.getId(),
+                                acc.getTitle(),
+                                acc.getOwnedByUserId()
+                        )
+                ).toList());
     }
 
-    public Account addAccount(String title, String ownedByUserId){
+    public AccountDTO addAccount(String title, String ownedByUserId){
         Account account = new Account();
         account.setId(IdGenerator.generateId());
         account.setTitle(title);
         account.setOwnedByUserId(ownedByUserId);
-        return accountsRepository.save(account);
+        accountsRepository.save(account);
+        return new AccountDTO(
+                account.getId(),
+                account.getTitle(),
+                account.getOwnedByUserId()
+        );
     }
 
     public AccountEnlargedDTO getById(String id){
@@ -62,20 +75,29 @@ public class AccountService {
         return accounts.stream().map(acc ->
                 new AccountDTO(
                         acc.getId(),
-                        acc.getTitle()
+                        acc.getTitle(),
+                        acc.getOwnedByUserId()
                 )
         ).toList();
     }
 
     @Transactional
-    public Account updateTitle(String id, String title){
+    public AccountDTO updateTitle(String id, String title){
         accountsRepository.updateTitle(id, title);
-        return accountsRepository.findById(id)
+        Account account = accountsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-"+id+" is not found. Title is not updated"));
+        return new AccountDTO(
+                account.getId(),
+                account.getTitle(),
+                account.getOwnedByUserId()
+        );
     }
 
     public String deleteAccount(String id){
+        String accountTitle = accountsRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("Account:id-"+id+" is not found. Account is not deleted"))
+                                .getTitle();
         accountsRepository.deleteById(id);
-        return "Account with id: "+id+" has been deleted";
+        return accountTitle;
     }
 }

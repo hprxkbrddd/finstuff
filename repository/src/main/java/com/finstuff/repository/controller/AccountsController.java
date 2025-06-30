@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("finstuff/v1/repo/accounts")
+@RequestMapping("/repo/accounts")
 @Tag(name = "Accounts Controller", description = "Operations pertaining to accounts")
 public class AccountsController {
     private final AccountService service;
@@ -30,9 +31,9 @@ public class AccountsController {
             }
     )
     @GetMapping("/all")
-    public ResponseEntity<List<Account>> getAll(){
+    public ResponseEntity<UserAccountsDTO> getAll(){
         return new ResponseEntity<>(service.getAll(),
-                service.getAll().isEmpty() ?
+                service.getAll().accountList().isEmpty() ?
                         HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
@@ -72,7 +73,7 @@ public class AccountsController {
             }
     )
     @PostMapping("/add")
-    public ResponseEntity<Account> addAccount(@RequestBody NewAccountDTO dto){
+    public ResponseEntity<AccountDTO> addAccount(@RequestBody NewAccountDTO dto){
         return new ResponseEntity<>(service.addAccount(dto.title(), dto.ownedByUserId()), HttpStatus.CREATED);
     }
 
@@ -84,7 +85,7 @@ public class AccountsController {
             }
     )
     @PutMapping("/update-title")
-    public ResponseEntity<Account> updateTitle(@RequestBody TitleUpdateDTO dto){
+    public ResponseEntity<AccountDTO> updateTitle(@RequestBody TitleUpdateDTO dto){
         return new ResponseEntity<>(service.updateTitle(dto.id(), dto.title()), HttpStatus.OK);
     }
 

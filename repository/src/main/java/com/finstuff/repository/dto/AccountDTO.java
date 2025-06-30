@@ -1,4 +1,8 @@
 package com.finstuff.repository.dto;
 
-public record AccountDTO(String id, String title) {
+public record AccountDTO(
+        String id,
+        String title,
+        String ownedByUserId
+) {
 }

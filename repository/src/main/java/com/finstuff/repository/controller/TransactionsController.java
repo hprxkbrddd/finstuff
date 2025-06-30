@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("finstuff/v1/repo/transactions")
+@RequestMapping("/repo/transactions")
 @RequiredArgsConstructor
 @Tag(name = "Transaction Controller", description = "Operations pertaining to transactions")
 public class TransactionsController {
