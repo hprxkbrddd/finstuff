@@ -26,7 +26,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable) // Отключить CSRF для API
                 .authorizeHttpRequests(request ->{request
-                        .requestMatchers("/finstuff/v1/keycloak/token").permitAll()
+                        .requestMatchers("/finstuff/v1/auth/token").permitAll()
                         .anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 ->
