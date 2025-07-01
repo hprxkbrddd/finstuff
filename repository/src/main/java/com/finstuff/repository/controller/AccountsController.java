@@ -1,19 +1,14 @@
 package com.finstuff.repository.controller;
 
 import com.finstuff.repository.dto.*;
-import com.finstuff.repository.entity.Account;
 import com.finstuff.repository.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,14 +17,6 @@ import java.util.List;
 public class AccountsController {
     private final AccountService service;
 
-    @Operation(
-            summary = "Get all accounts",
-            description = "Returns all accounts from db",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Success"),
-                    @ApiResponse(responseCode = "204", description = "no accounts in db")
-            }
-    )
     @GetMapping("/all")
     public ResponseEntity<UserAccountsDTO> getAll(){
         return new ResponseEntity<>(service.getAll(),
@@ -37,13 +24,6 @@ public class AccountsController {
                         HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
-    @Operation(
-            summary = "Get account by ID",
-            description = "Returns a single account",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Success"),
-            }
-    )
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<AccountEnlargedDTO> getById(@PathVariable String id){
         return new ResponseEntity<>(service.getById(id), HttpStatus.OK);

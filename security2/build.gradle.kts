@@ -28,8 +28,9 @@ dependencies {
 	implementation("org.projectlombok:lombok:0.11.0")
 	implementation("org.keycloak:keycloak-spring-boot-starter:25.0.3")
 	implementation("org.keycloak:keycloak-admin-client:26.0.5")
-	// https://mvnrepository.com/artifact/org.springframework/spring-webflux
 	implementation("org.springframework:spring-webflux:6.2.8")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
+
 }
 
 tasks.withType<Test> {
