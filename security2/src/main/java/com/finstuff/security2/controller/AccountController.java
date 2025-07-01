@@ -28,7 +28,8 @@ public class AccountController {
 
     @Operation(
             summary = "Get user's accounts",
-            description = "Returns a list of accounts of token owner",
+            description = "Returns a list of accounts of token owner. " +
+                    "Requires Bearer token within Authorization header.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success"),
                     @ApiResponse(responseCode = "204", description = "User has no accounts"),
@@ -45,7 +46,9 @@ public class AccountController {
 
     @Operation(
             summary = "Get all accounts",
-            description = "Returns all accounts from db, requires 'admin' role",
+            description = "Returns all accounts from db. " +
+                    "Requires Bearer token within Authorization header. " +
+                    "Owner of the token must be an admin.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success"),
                     @ApiResponse(responseCode = "204", description = "No accounts in db"),
@@ -63,7 +66,9 @@ public class AccountController {
 
     @Operation(
             summary = "Create account",
-            description = "Creates account and binds it to owner of the token",
+            description = "Creates account and binds it to owner of the token. " +
+                    "Requires Bearer token within Authorization header and title of the new account. " +
+                    "Title has to be sent as plain text in request body.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success"),
                     @ApiResponse(responseCode = "401", description = "Wrong credentials"),
@@ -84,7 +89,9 @@ public class AccountController {
 
     @Operation(
             summary = "Update account's title",
-            description = "Updates title of chosen account",
+            description = "Updates title of chosen account. " +
+                    "Requires Bearer token within Authorization header. " +
+                    "Body must contain account id and its new title",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success"),
                     @ApiResponse(responseCode = "401", description = "Wrong credentials"),
@@ -105,7 +112,9 @@ public class AccountController {
 
     @Operation(
             summary = "Delete account",
-            description = "Deletes chosen account",
+            description = "Deletes chosen account. " +
+                    "Requires Bearer token within Authorization header. " +
+                    "Account id has to be provided in endpoint's path.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success"),
                     @ApiResponse(responseCode = "401", description = "Wrong credentials"),
