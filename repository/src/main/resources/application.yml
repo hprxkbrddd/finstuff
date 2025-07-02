@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: repository
+  datasource:
+    url: jdbc:postgresql://localhost:5433/keycloak
+    username: keycloak
+    password: keycloak
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      # username:
+      # password:
+  cache:
+    type: redis
+  doc:
+    info:
+      title: finstuff-repo
+      version: 1.0.0
+      description: repository microservice for finstuff web application
+
+server:
+  port: 8082
+
+rabbitmq:
+  queue:
+    name: repositoryQ
+  exchange:
+    name: repositoryE
+  routing-key:
+    name: repositoryRK

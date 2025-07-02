@@ -10,11 +10,14 @@ import com.finstuff.repository.repository.AccountsRepository;
 import com.finstuff.repository.repository.TransactionsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -69,16 +72,17 @@ public class AccountService {
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-"+id+" is not found"));
     }
 
-    public List<AccountDTO> getByOwnerId(String ownerId){
+    @Cacheable(value = "accounts_of_user", key = "#ownerId")
+    public List<AccountDTO> getByOwnerId(String ownerId) {
         List<Account> accounts = accountsRepository.findByOwnedByUserId(ownerId)
-                .orElseThrow(() -> new EntityNotFoundException("Owner:id-"+ownerId+" is not found"));
-        return accounts.stream().map(acc ->
-                new AccountDTO(
+                .orElseThrow(() -> new EntityNotFoundException("Owner:id-" + ownerId + " is not found"));
+        return accounts.stream()
+                .map(acc -> new AccountDTO(
                         acc.getId(),
                         acc.getTitle(),
                         acc.getOwnedByUserId()
-                )
-        ).toList();
+                ))
+                .collect(Collectors.toList());
     }
 
     @Transactional
