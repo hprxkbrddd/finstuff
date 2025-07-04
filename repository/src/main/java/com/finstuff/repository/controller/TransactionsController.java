@@ -1,9 +1,6 @@
 package com.finstuff.repository.controller;
 
-import com.finstuff.repository.dto.AmountUpdateDTO;
-import com.finstuff.repository.dto.TitleUpdateDTO;
-import com.finstuff.repository.dto.NewTransactionDTO;
-import com.finstuff.repository.dto.TransactionDTO;
+import com.finstuff.repository.dto.*;
 import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,9 +32,9 @@ public class TransactionsController {
             }
     )
     @GetMapping("/all")
-    public ResponseEntity<List<Transaction>> getAll() {
+    public ResponseEntity<AccountTransactionsDTO> getAll() {
         return new ResponseEntity<>(service.getAll(),
-                service.getAll().isEmpty() ?
+                service.getAll().transactionList().isEmpty() ?
                         HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 

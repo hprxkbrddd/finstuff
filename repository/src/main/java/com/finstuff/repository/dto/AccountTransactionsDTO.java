@@ -1,5 +1,4 @@
-package com.finstuff.security2.dto;
-
+package com.finstuff.repository.dto;
 
 import java.util.List;
 

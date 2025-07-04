@@ -1,6 +1,7 @@
 package com.finstuff.repository.service;
 
 import com.finstuff.repository.component.IdGenerator;
+import com.finstuff.repository.dto.AccountTransactionsDTO;
 import com.finstuff.repository.dto.TransactionDTO;
 import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.repository.TransactionsRepository;
@@ -19,17 +20,23 @@ public class TransactionService {
 
     private final TransactionsRepository transactionsRepository;
 
-    public List<Transaction> getAll(){
-        return transactionsRepository.findAll();
+    public AccountTransactionsDTO getAll() {
+        return new AccountTransactionsDTO(transactionsRepository.findAll()
+                .stream().map(transaction -> new TransactionDTO(
+                        transaction.getId(),
+                        transaction.getAmount(),
+                        transaction.getTitle()
+                )).toList()
+        );
     }
 
-    public Optional<Transaction> getById(String id){
+    public Optional<Transaction> getById(String id) {
         return transactionsRepository.findById(id);
     }
 
     public TransactionDTO add(String title,
                               BigDecimal amount,
-                              String accountId){
+                              String accountId) {
         Transaction transaction = new Transaction();
         transaction.setId(IdGenerator.generateId());
         transaction.setTitle(title);
@@ -45,17 +52,17 @@ public class TransactionService {
     }
 
     @Transactional
-    public int updateTitle(String id, String title){
+    public int updateTitle(String id, String title) {
         return transactionsRepository.updateTitle(id, title);
     }
 
     @Transactional
-    public int updateAmount(String id, BigDecimal amount){
+    public int updateAmount(String id, BigDecimal amount) {
         return transactionsRepository.updateAmount(id, amount);
     }
 
     @Transactional
-    public boolean delete(String id){
+    public boolean delete(String id) {
         if (transactionsRepository.findById(id).isEmpty()) return false;
         transactionsRepository.deleteById(id);
         return true;

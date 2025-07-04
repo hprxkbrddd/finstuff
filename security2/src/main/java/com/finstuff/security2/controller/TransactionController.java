@@ -25,7 +25,7 @@ public class TransactionController {
     public Mono<ResponseEntity<AccountTransactionsDTO>> getAll() {
         return service.getAll()
                 .map(transactions ->
-                        transactions.transactionsList().isEmpty() ?
+                        transactions.transactionList().isEmpty() ?
                                 ResponseEntity.noContent().build() : ResponseEntity.ok(transactions));
     }
 
