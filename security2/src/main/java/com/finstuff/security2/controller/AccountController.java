@@ -1,13 +1,12 @@
 package com.finstuff.security2.controller;
 
 import com.finstuff.security2.dto.AccountDTO;
-import com.finstuff.security2.dto.UpdateTitleDTO;
+import com.finstuff.security2.dto.TitleUpdateDTO;
 import com.finstuff.security2.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -78,13 +77,7 @@ public class AccountController {
     @PostMapping("/new")
     public Mono<ResponseEntity<AccountDTO>> add(@RequestHeader("Authorization") String token, @RequestBody String title){
         return accountService.create(token.substring(7), title)
-                .map(account ->
-                        ResponseEntity.ok(new AccountDTO(
-                                account.id(),
-                                account.title(),
-                                account.ownedByUserId())
-                        )
-                );
+                .map(ResponseEntity::ok);
     }
 
     @Operation(
@@ -99,15 +92,9 @@ public class AccountController {
             }
     )
     @PutMapping("/update-title")
-    public Mono<ResponseEntity<AccountDTO>> updateTitle(@RequestBody UpdateTitleDTO dto){
+    public Mono<ResponseEntity<AccountDTO>> updateTitle(@RequestBody TitleUpdateDTO dto){
         return accountService.updateTitle(dto.id(), dto.title())
-                .map(account ->
-                        ResponseEntity.ok(new AccountDTO(
-                                account.id(),
-                                account.title(),
-                                account.ownedByUserId())
-                        )
-                );
+                .map(ResponseEntity::ok);
     }
 
     @Operation(

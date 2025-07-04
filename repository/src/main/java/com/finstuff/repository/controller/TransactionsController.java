@@ -3,6 +3,7 @@ package com.finstuff.repository.controller;
 import com.finstuff.repository.dto.AmountUpdateDTO;
 import com.finstuff.repository.dto.TitleUpdateDTO;
 import com.finstuff.repository.dto.NewTransactionDTO;
+import com.finstuff.repository.dto.TransactionDTO;
 import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class TransactionsController {
             }
     )
     @GetMapping("/all")
-    public ResponseEntity<List<Transaction>> getAll(){
+    public ResponseEntity<List<Transaction>> getAll() {
         return new ResponseEntity<>(service.getAll(),
                 service.getAll().isEmpty() ?
                         HttpStatus.NO_CONTENT : HttpStatus.OK);
@@ -47,10 +49,10 @@ public class TransactionsController {
             }
     )
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<Transaction> getById(@PathVariable String id){
+    public ResponseEntity<Transaction> getById(@PathVariable String id) {
         Optional<Transaction> transaction = service.getById(id);
         return transaction.map(
-                value -> new ResponseEntity<>(value, HttpStatus.OK))
+                        value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(new Transaction(), HttpStatus.NOT_FOUND));
     }
 
@@ -62,7 +64,7 @@ public class TransactionsController {
             }
     )
     @PostMapping("/add")
-    public ResponseEntity<Transaction> add(@RequestBody NewTransactionDTO dto){
+    public ResponseEntity<TransactionDTO> add(@RequestBody NewTransactionDTO dto) {
         return new ResponseEntity<>(
                 service.add(
                         dto.title(),
@@ -81,10 +83,10 @@ public class TransactionsController {
             }
     )
     @PutMapping("/update-title")
-    public ResponseEntity<String> updateTitle(@RequestBody TitleUpdateDTO dto){
-        return service.updateTitle(dto.id(), dto.title()) == 1?
-                new ResponseEntity<>("Title has been updated to '"+dto.title()+"'", HttpStatus.OK):
-                new ResponseEntity<>("Title has not been updated", HttpStatus.NOT_FOUND);
+    public ResponseEntity<TitleUpdateDTO> updateTitle(@RequestBody TitleUpdateDTO dto) {
+        return service.updateTitle(dto.id(), dto.title()) == 1 ?
+                new ResponseEntity<>(dto, HttpStatus.OK) :
+                new ResponseEntity<>(new TitleUpdateDTO(dto.id(), ""), HttpStatus.NOT_FOUND);
     }
 
     @Operation(
@@ -96,10 +98,10 @@ public class TransactionsController {
             }
     )
     @PutMapping("/update-amount")
-    public ResponseEntity<String> updateTitle(@RequestBody AmountUpdateDTO dto){
-        return service.updateAmount(dto.id(), dto.amount()) == 1?
-                new ResponseEntity<>("Amount has been updated to '"+dto.amount()+"'", HttpStatus.OK):
-                new ResponseEntity<>("Amount has not been updated", HttpStatus.NOT_FOUND);
+    public ResponseEntity<AmountUpdateDTO> updateTitle(@RequestBody AmountUpdateDTO dto) {
+        return service.updateAmount(dto.id(), dto.amount()) == 1 ?
+                new ResponseEntity<>(dto, HttpStatus.OK) :
+                new ResponseEntity<>(new AmountUpdateDTO(dto.id(), BigDecimal.ZERO), HttpStatus.NOT_FOUND);
     }
 
     @Operation(
@@ -111,9 +113,9 @@ public class TransactionsController {
             }
     )
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable String id){
-        return service.delete(id)?
-                new ResponseEntity<>("Transaction-id:"+id+" has been deleted", HttpStatus.OK):
-                new ResponseEntity<>("Transaction-id:"+id+" has not been deleted", HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> delete(@PathVariable String id) {
+        return service.delete(id) ?
+                new ResponseEntity<>(id, HttpStatus.OK) :
+                new ResponseEntity<>("err: no transaction in db", HttpStatus.NOT_FOUND);
     }
 }

@@ -1,6 +1,7 @@
 package com.finstuff.repository.service;
 
 import com.finstuff.repository.component.IdGenerator;
+import com.finstuff.repository.dto.TransactionDTO;
 import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.repository.TransactionsRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +27,21 @@ public class TransactionService {
         return transactionsRepository.findById(id);
     }
 
-    public Transaction add(String title,
-                           BigDecimal amount,
-                           String accountId){
+    public TransactionDTO add(String title,
+                              BigDecimal amount,
+                              String accountId){
         Transaction transaction = new Transaction();
         transaction.setId(IdGenerator.generateId());
         transaction.setTitle(title);
         transaction.setAmount(amount);
         transaction.setAccountId(accountId);
         transaction.setTimestamp(LocalDateTime.now());
-        return transactionsRepository.save(transaction);
+        Transaction res = transactionsRepository.save(transaction);
+        return new TransactionDTO(
+                res.getId(),
+                res.getAmount(),
+                res.getTitle()
+        );
     }
 
     @Transactional

@@ -3,7 +3,7 @@ package com.finstuff.security2.service;
 import com.finstuff.security2.component.JWTDecoder;
 import com.finstuff.security2.dto.AccountDTO;
 import com.finstuff.security2.dto.NewAccountDTO;
-import com.finstuff.security2.dto.UpdateTitleDTO;
+import com.finstuff.security2.dto.TitleUpdateDTO;
 import com.finstuff.security2.dto.UserAccountsDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class AccountService {
     public Mono<AccountDTO> updateTitle(String accountId, String newTitle){
         return webClient.put()
                 .uri("/update-title")
-                .bodyValue(new UpdateTitleDTO(accountId, newTitle))
+                .bodyValue(new TitleUpdateDTO(accountId, newTitle))
                 .retrieve()
                 .bodyToMono(AccountDTO.class);
     }
