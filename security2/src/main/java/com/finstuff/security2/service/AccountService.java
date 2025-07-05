@@ -1,10 +1,7 @@
 package com.finstuff.security2.service;
 
 import com.finstuff.security2.component.JWTDecoder;
-import com.finstuff.security2.dto.AccountDTO;
-import com.finstuff.security2.dto.NewAccountDTO;
-import com.finstuff.security2.dto.TitleUpdateDTO;
-import com.finstuff.security2.dto.UserAccountsDTO;
+import com.finstuff.security2.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,12 +27,19 @@ public class AccountService {
                 .bodyToMono(UserAccountsDTO.class);
     }
 
-    public Mono<AccountDTO> create(String token, String title){
+    public Mono<AccountEnlargedDTO> create(String token, String title){
         return webClient.post()
                 .uri("/add")
                 .bodyValue(new NewAccountDTO(title, extractSubject(token)))
                 .retrieve()
-                .bodyToMono(AccountDTO.class);
+                .bodyToMono(AccountEnlargedDTO.class);
+    }
+
+    public Mono<AccountEnlargedDTO> getById(String id){
+        return webClient.get()
+                .uri("/get-by-id/"+id)
+                .retrieve()
+                .bodyToMono(AccountEnlargedDTO.class);
     }
 
     public Mono<UserAccountsDTO> getAccounts(String token) {
@@ -45,18 +49,18 @@ public class AccountService {
                 .bodyToMono(UserAccountsDTO.class);
     }
 
-    public Mono<AccountDTO> updateTitle(String accountId, String newTitle){
+    public Mono<AccountEnlargedDTO> updateTitle(String accountId, String newTitle){
         return webClient.put()
                 .uri("/update-title")
                 .bodyValue(new TitleUpdateDTO(accountId, newTitle))
                 .retrieve()
-                .bodyToMono(AccountDTO.class);
+                .bodyToMono(AccountEnlargedDTO.class);
     }
 
-    public Mono<String> delete(String accountId){
+    public Mono<AccountDTO> delete(String accountId){
         return webClient.delete()
                 .uri("/delete/"+accountId)
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(AccountDTO.class);
     }
 }

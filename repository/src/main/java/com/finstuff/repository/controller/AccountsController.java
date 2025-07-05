@@ -34,17 +34,17 @@ public class AccountsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<AccountDTO> addAccount(@RequestBody NewAccountDTO dto){
+    public ResponseEntity<AccountEnlargedDTO> addAccount(@RequestBody NewAccountDTO dto){
         return new ResponseEntity<>(service.addAccount(dto.title(), dto.ownedByUserId()), HttpStatus.CREATED);
     }
 
     @PutMapping("/update-title")
-    public ResponseEntity<AccountDTO> updateTitle(@RequestBody TitleUpdateDTO dto){
+    public ResponseEntity<AccountEnlargedDTO> updateTitle(@RequestBody TitleUpdateDTO dto){
         return new ResponseEntity<>(service.updateTitle(dto.id(), dto.title()), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable String id){
+    public ResponseEntity<AccountDTO> delete(@PathVariable String id){
         return new ResponseEntity<>(service.deleteAccount(id), HttpStatus.OK);
     }
 }

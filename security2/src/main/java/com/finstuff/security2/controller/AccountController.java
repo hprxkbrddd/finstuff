@@ -1,6 +1,7 @@
 package com.finstuff.security2.controller;
 
 import com.finstuff.security2.dto.AccountDTO;
+import com.finstuff.security2.dto.AccountEnlargedDTO;
 import com.finstuff.security2.dto.TitleUpdateDTO;
 import com.finstuff.security2.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,10 +36,10 @@ public class AccountController {
             }
     )
     @GetMapping("/list")
-    public Mono<ResponseEntity<List<AccountDTO>>> getAccounts(@RequestHeader("Authorization") String token){
+    public Mono<ResponseEntity<List<AccountDTO>>> getAccounts(@RequestHeader("Authorization") String token) {
         return accountService.getAccounts(token.substring(7))
                 .map(accounts ->
-                        accounts.accountList().isEmpty()?
+                        accounts.accountList().isEmpty() ?
                                 ResponseEntity.noContent().build() : ResponseEntity.ok(accounts.accountList()));
     }
 
@@ -54,10 +55,16 @@ public class AccountController {
     )
     @PreAuthorize("hasRole('admin')")
     @GetMapping("/get-all")
-    public Mono<ResponseEntity<List<AccountDTO>>> getAll(Authentication authentication){
+    public Mono<ResponseEntity<List<AccountDTO>>> getAll(Authentication authentication) {
         return accountService.getAll()
-                .map(accounts -> accounts.accountList().isEmpty()?
+                .map(accounts -> accounts.accountList().isEmpty() ?
                         ResponseEntity.noContent().build() : ResponseEntity.ok(accounts.accountList()));
+    }
+
+    @GetMapping("/get-by-id/{id}")
+    public Mono<ResponseEntity<AccountEnlargedDTO>> getById(@PathVariable String id){
+        return accountService.getById(id)
+                .map(ResponseEntity::ok);
     }
 
     @Operation(
@@ -72,7 +79,9 @@ public class AccountController {
             }
     )
     @PostMapping("/new")
-    public Mono<ResponseEntity<AccountDTO>> add(@RequestHeader("Authorization") String token, @RequestBody String title){
+    public Mono<ResponseEntity<AccountEnlargedDTO>> add(
+            @RequestHeader("Authorization") String token,
+            @RequestBody String title) {
         return accountService.create(token.substring(7), title)
                 .map(ResponseEntity::ok);
     }
@@ -88,7 +97,7 @@ public class AccountController {
             }
     )
     @PutMapping("/update-title")
-    public Mono<ResponseEntity<AccountDTO>> updateTitle(@RequestBody TitleUpdateDTO dto){
+    public Mono<ResponseEntity<AccountEnlargedDTO>> updateTitle(@RequestBody TitleUpdateDTO dto) {
         return accountService.updateTitle(dto.id(), dto.title())
                 .map(ResponseEntity::ok);
     }
@@ -105,7 +114,7 @@ public class AccountController {
             }
     )
     @DeleteMapping("/delete/{accountId}")
-    public Mono<ResponseEntity<String>> delete(@PathVariable String accountId) {
+    public Mono<ResponseEntity<AccountDTO>> delete(@PathVariable String accountId) {
         return accountService.delete(accountId)
                 .map(ResponseEntity::ok);
     }
