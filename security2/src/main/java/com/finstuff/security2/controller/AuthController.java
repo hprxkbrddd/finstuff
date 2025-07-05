@@ -4,6 +4,7 @@ import com.finstuff.security2.dto.AuthDTO;
 import com.finstuff.security2.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -13,6 +14,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @EnableMethodSecurity
 @RequestMapping("/finstuff/v1/auth")
+@Tag(name = "Authorization service")
 public class AuthController {
 
     @Autowired

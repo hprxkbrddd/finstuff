@@ -10,6 +10,7 @@ import com.finstuff.repository.repository.AccountsRepository;
 import com.finstuff.repository.repository.TransactionsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ public class AccountService {
                 ).toList());
     }
 
+    @CacheEvict(value = "accounts_of_user", key = "#ownedByUserId")
     public AccountDTO addAccount(String title, String ownedByUserId){
         Account account = new Account();
         account.setId(IdGenerator.generateId());
