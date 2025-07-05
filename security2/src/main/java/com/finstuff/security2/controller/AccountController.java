@@ -27,8 +27,7 @@ public class AccountController {
 
     @Operation(
             summary = "Get user's accounts",
-            description = "Returns a list of accounts of token owner. " +
-                    "Requires Bearer token within Authorization header.",
+            description = "Returns a list of accounts of token owner. ",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success"),
                     @ApiResponse(responseCode = "204", description = "User has no accounts"),
@@ -45,9 +44,7 @@ public class AccountController {
 
     @Operation(
             summary = "Get all accounts",
-            description = "Returns all accounts from db. " +
-                    "Requires Bearer token within Authorization header. " +
-                    "Owner of the token must be an admin.",
+            description = "Returns all accounts from db. Requires admin role",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success"),
                     @ApiResponse(responseCode = "204", description = "No accounts in db"),
@@ -66,7 +63,7 @@ public class AccountController {
     @Operation(
             summary = "Create account",
             description = "Creates account and binds it to owner of the token. " +
-                    "Requires Bearer token within Authorization header and title of the new account. " +
+                    "Requires title of the new account. " +
                     "Title has to be sent as plain text in request body.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success"),
@@ -83,7 +80,6 @@ public class AccountController {
     @Operation(
             summary = "Update account's title",
             description = "Updates title of chosen account. " +
-                    "Requires Bearer token within Authorization header. " +
                     "Body must contain account id and its new title",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success"),
