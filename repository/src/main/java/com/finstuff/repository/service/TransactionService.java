@@ -8,6 +8,10 @@ import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.repository.TransactionsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +36,7 @@ public class TransactionService {
         );
     }
 
+    @Cacheable(value = "transaction", key = "#id")
     public TransactionEnlargedDTO getById(String id) {
         Transaction res = transactionsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction-id:" + id + " is not found."));
@@ -44,6 +49,7 @@ public class TransactionService {
         );
     }
 
+    @Cacheable(value = "account_transactions", key = "#accountId")
     public AccountTransactionsDTO getByAccountId(String accountId) {
         List<Transaction> res = transactionsRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account-id:" + accountId + " either has no transactions or does not exist."));
@@ -56,9 +62,13 @@ public class TransactionService {
         ).collect(Collectors.toList()));
     }
 
-    public TransactionDTO add(String title,
-                              BigDecimal amount,
-                              String accountId) {
+    @Caching(
+            put = @CachePut(value = "transaction", key = "#result.id"),
+            evict = @CacheEvict(value = "account_transactions", key = "#accountId")
+    )
+    public TransactionEnlargedDTO add(String title,
+                                      BigDecimal amount,
+                                      String accountId) {
         Transaction transaction = new Transaction();
         transaction.setId(IdGenerator.generateId());
         transaction.setTitle(title);
@@ -66,27 +76,68 @@ public class TransactionService {
         transaction.setAccountId(accountId);
         transaction.setTimestamp(LocalDateTime.now());
         Transaction res = transactionsRepository.save(transaction);
-        return new TransactionDTO(
+        return new TransactionEnlargedDTO(
                 res.getId(),
+                res.getTitle(),
                 res.getAmount(),
-                res.getTitle()
+                res.getTimestamp(),
+                res.getAccountId()
         );
     }
 
     @Transactional
-    public int updateTitle(String id, String title) {
-        return transactionsRepository.updateTitle(id, title);
+    @Caching(
+            put = @CachePut(value = "transaction", key = "#result.id"),
+            evict = @CacheEvict(value = "account_transactions", key = "#accountId")
+    )
+    public TransactionEnlargedDTO updateTitle(String id, String title) {
+        transactionsRepository.updateTitle(id, title);
+        Transaction res = transactionsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transaction-id:" + id + " is not found."));
+        return new TransactionEnlargedDTO(
+                res.getId(),
+                res.getTitle(),
+                res.getAmount(),
+                res.getTimestamp(),
+                res.getAccountId()
+        );
     }
 
     @Transactional
-    public int updateAmount(String id, BigDecimal amount) {
-        return transactionsRepository.updateAmount(id, amount);
+    @Caching(
+            put = @CachePut(value = "transaction", key = "#result.id"),
+            evict = @CacheEvict(value = "account_transactions", key = "#accountId")
+    )
+    public TransactionEnlargedDTO updateAmount(String id, BigDecimal amount) {
+        transactionsRepository.updateAmount(id, amount);
+        Transaction res = transactionsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transaction-id:" + id + " is not found."));
+        return new TransactionEnlargedDTO(
+                res.getId(),
+                res.getTitle(),
+                res.getAmount(),
+                res.getTimestamp(),
+                res.getAccountId()
+        );
     }
 
     @Transactional
-    public boolean delete(String id) {
-        if (transactionsRepository.findById(id).isEmpty()) return false;
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "account_transactions", key = "#result.accountId"),
+                    @CacheEvict(value = "transaction", key = "#id")
+            }
+    )
+    public TransactionEnlargedDTO delete(String id) {
+        Transaction res = transactionsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transaction-id:" + id + " is not found."));
         transactionsRepository.deleteById(id);
-        return true;
+        return new TransactionEnlargedDTO(
+                res.getId(),
+                res.getTitle(),
+                res.getAmount(),
+                res.getTimestamp(),
+                res.getAccountId()
+        );
     }
 }

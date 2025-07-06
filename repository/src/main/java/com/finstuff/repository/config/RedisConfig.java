@@ -61,7 +61,7 @@ public class RedisConfig {
         );
 
         // TRANSACTIONS OF ACCOUNT CACHE
-        cacheConfigurationMap.put("transactions_of_account", RedisCacheConfiguration
+        cacheConfigurationMap.put("account_transactions", RedisCacheConfiguration
                 .defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(5))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair

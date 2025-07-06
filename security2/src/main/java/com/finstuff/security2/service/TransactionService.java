@@ -1,13 +1,10 @@
 package com.finstuff.security2.service;
 
-import com.finstuff.security2.component.JWTDecoder;
 import com.finstuff.security2.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +32,12 @@ public class TransactionService {
                 .bodyToMono(AccountTransactionsDTO.class);
     }
 
-    public Mono<TransactionDTO> add(NewTransactionDTO dto){
+    public Mono<TransactionEnlargedDTO> add(NewTransactionDTO dto){
         return webClient.post()
                 .uri("/add")
                 .bodyValue(dto)
                 .retrieve()
-                .bodyToMono(TransactionDTO.class);
+                .bodyToMono(TransactionEnlargedDTO.class);
     }
 
     public Mono<TitleUpdateDTO> updateTitle(TitleUpdateDTO dto){

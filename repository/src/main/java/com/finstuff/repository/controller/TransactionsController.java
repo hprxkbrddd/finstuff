@@ -1,17 +1,11 @@
 package com.finstuff.repository.controller;
 
 import com.finstuff.repository.dto.*;
-import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.service.TransactionService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/repo/transactions")
@@ -42,7 +36,7 @@ public class TransactionsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<TransactionDTO> add(@RequestBody NewTransactionDTO dto) {
+    public ResponseEntity<TransactionEnlargedDTO> add(@RequestBody NewTransactionDTO dto) {
         return new ResponseEntity<>(
                 service.add(
                         dto.title(),
@@ -54,22 +48,24 @@ public class TransactionsController {
 
     @PutMapping("/update-title")
     public ResponseEntity<TitleUpdateDTO> updateTitle(@RequestBody TitleUpdateDTO dto) {
-        return service.updateTitle(dto.id(), dto.title()) == 1 ?
-                new ResponseEntity<>(dto, HttpStatus.OK) :
-                new ResponseEntity<>(new TitleUpdateDTO(dto.id(), ""), HttpStatus.NOT_FOUND);
+        TransactionEnlargedDTO result = service.updateTitle(dto.id(), dto.title());
+        return ResponseEntity.ok(new TitleUpdateDTO(
+                result.id(),
+                result.title()
+        ));
     }
 
     @PutMapping("/update-amount")
     public ResponseEntity<AmountUpdateDTO> updateTitle(@RequestBody AmountUpdateDTO dto) {
-        return service.updateAmount(dto.id(), dto.amount()) == 1 ?
-                new ResponseEntity<>(dto, HttpStatus.OK) :
-                new ResponseEntity<>(new AmountUpdateDTO(dto.id(), BigDecimal.ZERO), HttpStatus.NOT_FOUND);
+        TransactionEnlargedDTO result = service.updateAmount(dto.id(), dto.amount());
+        return ResponseEntity.ok(new AmountUpdateDTO(
+                result.id(),
+                result.amount()
+        ));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable String id) {
-        return service.delete(id) ?
-                new ResponseEntity<>(id, HttpStatus.OK) :
-                new ResponseEntity<>("err: no transaction in db", HttpStatus.NOT_FOUND);
+    public ResponseEntity<TransactionEnlargedDTO> delete(@PathVariable String id) {
+        return ResponseEntity.ok(service.delete(id));
     }
 }

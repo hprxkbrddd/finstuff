@@ -76,7 +76,7 @@ public class TransactionController {
             }
     )
     @PostMapping("/add")
-    public Mono<ResponseEntity<TransactionDTO>> add(@RequestBody NewTransactionDTO dto) {
+    public Mono<ResponseEntity<TransactionEnlargedDTO>> add(@RequestBody NewTransactionDTO dto) {
         return service.add(dto)
                 .map(ResponseEntity::ok);
     }
