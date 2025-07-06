@@ -3,8 +3,10 @@ package com.finstuff.repository.service;
 import com.finstuff.repository.component.IdGenerator;
 import com.finstuff.repository.dto.AccountTransactionsDTO;
 import com.finstuff.repository.dto.TransactionDTO;
+import com.finstuff.repository.dto.TransactionEnlargedDTO;
 import com.finstuff.repository.entity.Transaction;
 import com.finstuff.repository.repository.TransactionsRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +32,28 @@ public class TransactionService {
         );
     }
 
-    public Optional<Transaction> getById(String id) {
-        return transactionsRepository.findById(id);
+    public TransactionEnlargedDTO getById(String id) {
+        Transaction res = transactionsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transaction-id:" + id + " is not found."));
+        return new TransactionEnlargedDTO(
+                res.getId(),
+                res.getTitle(),
+                res.getAmount(),
+                res.getTimestamp(),
+                res.getAccountId()
+        );
+    }
+
+    public AccountTransactionsDTO getByAccountId(String accountId) {
+        List<Transaction> res = transactionsRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("Account-id:" + accountId + " either has no transactions or does not exist."));
+        return new AccountTransactionsDTO(res.stream().map(
+                transaction -> new TransactionDTO(
+                        transaction.getId(),
+                        transaction.getAmount(),
+                        transaction.getTitle()
+                )
+        ).collect(Collectors.toList()));
     }
 
     public TransactionDTO add(String title,

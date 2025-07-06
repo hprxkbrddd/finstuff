@@ -54,6 +54,20 @@ public class TransactionController {
     }
 
     @Operation(
+            summary = "Get transactions of account",
+            description = "Returns an object which contains transactionList, which belong to provided account. " +
+                    "Requires transaction id in request path.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Success"),
+            }
+    )
+    @GetMapping("/get-by-account-id/{accountId}")
+    public Mono<ResponseEntity<AccountTransactionsDTO>> getByAccountId(@PathVariable String accountId){
+        return service.getByAccountId(accountId)
+                .map(ResponseEntity::ok);
+    }
+
+    @Operation(
             summary = "Add transaction",
             description = "Creates new transaction. " +
                     "Requires transaction data (title, amount and account which it belongs to) in request body",

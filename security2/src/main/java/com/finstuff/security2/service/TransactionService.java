@@ -28,6 +28,13 @@ public class TransactionService {
                 .bodyToMono(TransactionEnlargedDTO.class);
     }
 
+    public Mono<AccountTransactionsDTO> getByAccountId(String accountId){
+        return webClient.get()
+                .uri(String.format("/get-by-account-id/%s", accountId))
+                .retrieve()
+                .bodyToMono(AccountTransactionsDTO.class);
+    }
+
     public Mono<TransactionDTO> add(NewTransactionDTO dto){
         return webClient.post()
                 .uri("/add")

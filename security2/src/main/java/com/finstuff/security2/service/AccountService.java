@@ -35,6 +35,7 @@ public class AccountService {
                 .bodyToMono(AccountEnlargedDTO.class);
     }
 
+    // TODO add protection from illegal access
     public Mono<AccountEnlargedDTO> getById(String id){
         return webClient.get()
                 .uri("/get-by-id/"+id)

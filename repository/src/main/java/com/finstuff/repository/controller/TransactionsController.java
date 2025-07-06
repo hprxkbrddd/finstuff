@@ -10,29 +10,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/repo/transactions")
 @RequiredArgsConstructor
-@Tag(name = "Transaction Controller", description = "Operations pertaining to transactions")
 public class TransactionsController {
 
     private final TransactionService service;
 
     @GetMapping("/all")
     public ResponseEntity<AccountTransactionsDTO> getAll() {
-        return new ResponseEntity<>(service.getAll(),
-                service.getAll().transactionList().isEmpty() ?
+        AccountTransactionsDTO res = service.getAll();
+        return new ResponseEntity<>(res,
+                res.transactionList().isEmpty() ?
                         HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<Transaction> getById(@PathVariable String id) {
-        Optional<Transaction> transaction = service.getById(id);
-        return transaction.map(
-                        value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new Transaction(), HttpStatus.NOT_FOUND));
+    public ResponseEntity<TransactionEnlargedDTO> getById(@PathVariable String id) {
+        return ResponseEntity.ok(service.getById(id));
+    }
+
+    @GetMapping("/get-by-account-id/{accountId}")
+    public ResponseEntity<AccountTransactionsDTO> getByAccountId(@PathVariable String accountId) {
+        AccountTransactionsDTO res = service.getByAccountId(accountId);
+        return new ResponseEntity<>(res,
+                res.transactionList().isEmpty()?
+                        HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @PostMapping("/add")

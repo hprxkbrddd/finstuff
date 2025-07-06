@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.finstuff.repository.dto.AccountDTO;
 import com.finstuff.repository.dto.AccountEnlargedDTO;
+import com.finstuff.repository.dto.AccountTransactionsDTO;
+import com.finstuff.repository.dto.TransactionEnlargedDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -33,6 +35,7 @@ public class RedisConfig {
 
         Map<String, RedisCacheConfiguration> cacheConfigurationMap = new HashMap<>();
 
+        // ACCOUNTS OF USER CACHE
         cacheConfigurationMap.put("accounts_of_user", RedisCacheConfiguration
                 .defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(5))
@@ -45,6 +48,7 @@ public class RedisConfig {
                 )
         );
 
+        // ACCOUNT CACHE
         cacheConfigurationMap.put("account", RedisCacheConfiguration
                 .defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(5))
@@ -56,15 +60,29 @@ public class RedisConfig {
                 )
         );
 
+        // TRANSACTIONS OF ACCOUNT CACHE
         cacheConfigurationMap.put("transactions_of_account", RedisCacheConfiguration
                 .defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(5))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                        .fromSerializer(new Jackson2JsonRedisSerializer<>(objectMapper, AccountTransactionsDTO.class))
+                )
         );
+
+        // TRANSACTION CACHE
+        cacheConfigurationMap.put("transaction", RedisCacheConfiguration
+                .defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(5))
+                .disableCachingNullValues()
+                .serializeValuesWith(RedisSerializationContext.SerializationPair
+                        .fromSerializer(new Jackson2JsonRedisSerializer<>(objectMapper, TransactionEnlargedDTO.class))
+                )
+        );
+
         return RedisCacheManager.builder(connectionFactory)
                 .withInitialCacheConfigurations(cacheConfigurationMap)
                 .transactionAware()
                 .build();
+
     }
 }
