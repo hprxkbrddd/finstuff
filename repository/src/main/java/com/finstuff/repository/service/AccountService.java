@@ -38,10 +38,10 @@ public class AccountService {
                 ).toList());
     }
 
-//    @Caching(
-//            put = @CachePut(value = "account", key = "result.id"),
-//            evict = @CacheEvict(value = "accounts_of_user", key = "#ownedByUserId")
-//    )
+    @Caching(
+            put = @CachePut(value = "account", key = "#result.id"),
+            evict = @CacheEvict(value = "accounts_of_user", key = "#ownedByUserId")
+    )
     public AccountEnlargedDTO addAccount(String title, String ownedByUserId) {
         Account account = new Account();
         account.setId(IdGenerator.generateId());

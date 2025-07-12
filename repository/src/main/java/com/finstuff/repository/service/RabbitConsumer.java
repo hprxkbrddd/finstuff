@@ -32,14 +32,15 @@ public class RabbitConsumer {
                     key = "${rabbitmq.routing-key.account.new}"
             )
     )
-    public void consume(@Payload String message, Message msg){
+    public String consume(@Payload String message, Message msg){
         try {
             log.info("Message properties -> {}", msg.getMessageProperties());
             NewAccountDTO dto = objectMapper.readValue(message, NewAccountDTO.class);
-            accountService.addAccount(dto.title(), dto.ownedByUserId());
+            AccountEnlargedDTO res = accountService.addAccount(dto.title(), dto.ownedByUserId());
+            return objectMapper.writeValueAsString(res);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            log.error("JSON parsing exception: {}",e.getMessage());
+            return "null";
         }
-
     }
 }

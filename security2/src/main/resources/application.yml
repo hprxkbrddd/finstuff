@@ -23,9 +23,30 @@ spring:
     url: jdbc:postgresql://localhost:5432/nikitas_db
     username: postgres
     password: postgres
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: finstuff
+    password: finstuff
 
 server:
   port: 8081
+
+rabbitmq:
+  queue:
+    sec-rep: security-repository-queue
+    rep-sec: repository-security-queue
+  exchange: finstuff_exchange
+  routing-key:
+    account:
+      new: new-account
+      title-upd: update-account-title
+      del: delete-account
+    transaction:
+      new: new-transaction
+      title-upd: update-transaction-title
+      amount-upd: update-transaction-amount
+      del: delete-transaction
 
 # Дополнительные настройки Keycloak (если нужен доступ к Admin API)
 #keycloak:

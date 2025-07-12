@@ -1,5 +1,6 @@
 package com.finstuff.security2.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.finstuff.security2.dto.AccountDTO;
 import com.finstuff.security2.dto.AccountEnlargedDTO;
 import com.finstuff.security2.dto.TitleUpdateDTO;
@@ -62,7 +63,7 @@ public class AccountController {
     }
 
     @GetMapping("/get-by-id/{id}")
-    public Mono<ResponseEntity<AccountEnlargedDTO>> getById(@PathVariable String id){
+    public Mono<ResponseEntity<AccountEnlargedDTO>> getById(@PathVariable String id) {
         return accountService.getById(id)
                 .map(ResponseEntity::ok);
     }
@@ -79,11 +80,11 @@ public class AccountController {
             }
     )
     @PostMapping("/new")
-    public Mono<ResponseEntity<AccountEnlargedDTO>> add(
+    public ResponseEntity<AccountEnlargedDTO> add(
             @RequestHeader("Authorization") String token,
-            @RequestBody String title) {
-        return accountService.create(token.substring(7), title)
-                .map(ResponseEntity::ok);
+            @RequestBody String title) throws JsonProcessingException {
+        accountService.create(token.substring(7), title);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(
