@@ -18,14 +18,31 @@ spring:
       title: finstuff-repo
       version: 1.0.0
       description: repository microservice for finstuff web application
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: finstuff
+    password: finstuff
 
 server:
   port: 8082
 
 rabbitmq:
   queue:
-    name: repositoryQ
-  exchange:
-    name: repositoryE
+    sec-rep: security-repository-queue
+    rep-sec: repository-security-queue
+  exchange: finstuff_exchange
   routing-key:
-    name: repositoryRK
+    account:
+      new: new-account
+      title-upd: update-account-title
+      del: delete-account
+      response:
+        new: response-new-account
+        title-upd: response-update-account-title
+        del: response-delete-account
+    transaction:
+      new: new-transaction
+      title-upd: update-transaction-title
+      amount-upd: update-transaction-amount
+      del: delete-transaction

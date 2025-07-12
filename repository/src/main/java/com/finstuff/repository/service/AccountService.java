@@ -9,6 +9,7 @@ import com.finstuff.repository.repository.AccountsRepository;
 import com.finstuff.repository.repository.TransactionsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,10 +38,10 @@ public class AccountService {
                 ).toList());
     }
 
-    @Caching(
-            put = @CachePut(value = "account", key = "result.id"),
-            evict = @CacheEvict(value = "accounts_of_user", key = "#ownedByUserId")
-    )
+//    @Caching(
+//            put = @CachePut(value = "account", key = "result.id"),
+//            evict = @CacheEvict(value = "accounts_of_user", key = "#ownedByUserId")
+//    )
     public AccountEnlargedDTO addAccount(String title, String ownedByUserId) {
         Account account = new Account();
         account.setId(IdGenerator.generateId());

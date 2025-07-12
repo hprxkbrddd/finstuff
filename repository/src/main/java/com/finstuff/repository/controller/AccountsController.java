@@ -33,10 +33,10 @@ public class AccountsController {
                 HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<AccountEnlargedDTO> addAccount(@RequestBody NewAccountDTO dto){
-        return new ResponseEntity<>(service.addAccount(dto.title(), dto.ownedByUserId()), HttpStatus.CREATED);
-    }
+//    @PostMapping("/add")
+//    public ResponseEntity<AccountEnlargedDTO> addAccount(@RequestBody NewAccountDTO dto){
+//        return new ResponseEntity<>(service.addAccount(dto.title(), dto.ownedByUserId()), HttpStatus.CREATED);
+//    }
 
     @PutMapping("/update-title")
     public ResponseEntity<AccountEnlargedDTO> updateTitle(@RequestBody TitleUpdateDTO dto){
