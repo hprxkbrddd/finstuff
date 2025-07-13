@@ -28,7 +28,7 @@ public class AccountService {
     private String exchange;
 
     @Value("${rabbitmq.queue.rep-sec}")
-    private String queue;
+    private String replyQueue;
 
     @Value("${rabbitmq.routing-key.account.new}")
     private String rkNew;
@@ -42,21 +42,6 @@ public class AccountService {
         return claims.get("sub").toString();
     }
 
-
-
-//    private void sendMsg(Object message, String routingKey) throws JsonProcessingException {
-//        rabbitTemplate.convertAndSend(
-//                exchange,
-//                routingKey,
-//                objectMapper.writeValueAsString(message),
-//                m -> {
-//                    m.getMessageProperties().setReplyTo(queue);
-//                    m.getMessageProperties().setCorrelationId(UUID.randomUUID().toString());
-//                    return m;
-//                }
-//        );
-//    }
-
     public Mono<UserAccountsDTO> getAll() {
         return webClient.get()
                 .uri("/all")
@@ -68,12 +53,12 @@ public class AccountService {
         rabbitTemplate.convertAndSend(
                 exchange,
                 rkNew,
-                objectMapper.writeValueAsString(new NewAccountDTO(title, extractSubject(token))),
-                m -> {
-                    m.getMessageProperties().setReplyTo(queue);
-                    m.getMessageProperties().setCorrelationId(UUID.randomUUID().toString());
-                    return m;
-                }
+                objectMapper.writeValueAsString(new NewAccountDTO(title, extractSubject(token)))
+//                m -> {
+//                    m.getMessageProperties().setReplyTo(replyQueue);
+//                    m.getMessageProperties().setCorrelationId(UUID.randomUUID().toString());
+//                    return m;
+//                }
         );
     }
 
@@ -91,12 +76,17 @@ public class AccountService {
                 .bodyToMono(UserAccountsDTO.class);
     }
 
-    public Mono<AccountEnlargedDTO> updateTitle(String accountId, String newTitle) {
-        return webClient.put()
+    public void updateTitle(TitleUpdateDTO dto) throws JsonProcessingException {
+        webClient.put()
                 .uri("/update-title")
-                .bodyValue(new TitleUpdateDTO(accountId, newTitle))
+                .bodyValue(dto)
                 .retrieve()
                 .bodyToMono(AccountEnlargedDTO.class);
+//        rabbitTemplate.convertAndSend(
+//                exchange,
+//                rkUpdTitle,
+//                objectMapper.writeValueAsString(dto)
+//        );
     }
 
     public Mono<AccountDTO> delete(String accountId) {

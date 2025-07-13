@@ -18,14 +18,25 @@ import org.springframework.stereotype.Service;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${spring.rabbitmq.host}") private String host;
-    @Value("${spring.rabbitmq.port}") private int port;
-    @Value("${spring.rabbitmq.username}") private String username;
-    @Value("${spring.rabbitmq.password}") private String password;
+    @Value("${spring.rabbitmq.host}")
+    private String host;
+    @Value("${spring.rabbitmq.port}")
+    private int port;
+    @Value("${spring.rabbitmq.username}")
+    private String username;
+    @Value("${spring.rabbitmq.password}")
+    private String password;
 
-    @Value("${rabbitmq.exchange}") private String exchange;
-    @Value("${rabbitmq.queue.sec-rep}") private String secRepQueue;
-    @Value("${rabbitmq.routing-key.account.new}") private String rkNew;
+    @Value("${rabbitmq.exchange}")
+    private String exchange;
+    @Value("${rabbitmq.queue.sec-rep}")
+    private String secRepQueue;
+    @Value("${rabbitmq.queue.rep-sec}")
+    private String repSecQueue;
+    @Value("${rabbitmq.routing-key.account.new}")
+    private String rkNew;
+    @Value("${rabbitmq.routing-key.account.response.new}")
+    private String rkNewRes;
 
     @Bean
     public TopicExchange exchange() {
@@ -33,13 +44,13 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue secRepQueue() {
-        return new Queue(secRepQueue, false);
+    public Queue repSecQueue() {
+        return new Queue(repSecQueue, false);
     }
 
     @Bean
-    public Binding secRepBindingNew(TopicExchange exchange) {
-        return BindingBuilder.bind(secRepQueue()).to(exchange).with(rkNew);
+    Binding repSecBindingNewRes(TopicExchange exchange) {
+        return BindingBuilder.bind(repSecQueue()).to(exchange).with(rkNewRes);
     }
 
     @Bean
@@ -48,7 +59,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public CachingConnectionFactory connectionFactory(){
+    public CachingConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory(host);
         connectionFactory.setUsername(username);
         connectionFactory.setPassword(password);
@@ -57,7 +68,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory){
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
     }
 

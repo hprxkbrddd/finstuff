@@ -16,11 +16,15 @@ public class RepositoryApplication {
 	private RabbitAdmin rabbitAdmin;
 
 	@Autowired
-	private Queue secRepQueue;
+	private Queue repSecQueue;
 
+//	@PostConstruct
+//	public void declareSecRepQueue(){
+//		rabbitAdmin.declareQueue(secRepQueue);
+//	}
 	@PostConstruct
-	public void declareQueue(){
-		rabbitAdmin.declareQueue(secRepQueue);
+	public void declareRepSecQueue(){
+		rabbitAdmin.declareQueue(repSecQueue);
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(RepositoryApplication.class, args);

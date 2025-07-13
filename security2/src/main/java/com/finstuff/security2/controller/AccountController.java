@@ -98,9 +98,9 @@ public class AccountController {
             }
     )
     @PutMapping("/update-title")
-    public Mono<ResponseEntity<AccountEnlargedDTO>> updateTitle(@RequestBody TitleUpdateDTO dto) {
-        return accountService.updateTitle(dto.id(), dto.title())
-                .map(ResponseEntity::ok);
+    public ResponseEntity<AccountEnlargedDTO> updateTitle(@RequestBody TitleUpdateDTO dto) throws JsonProcessingException {
+        accountService.updateTitle(dto);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(

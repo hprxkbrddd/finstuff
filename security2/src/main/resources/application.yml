@@ -42,6 +42,10 @@ rabbitmq:
       new: new-account
       title-upd: update-account-title
       del: delete-account
+      response:
+        new: response-new-account
+        title-upd: response-update-account-title
+        del: response-delete-account
     transaction:
       new: new-transaction
       title-upd: update-transaction-title

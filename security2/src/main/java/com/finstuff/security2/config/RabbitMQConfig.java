@@ -42,10 +42,10 @@ public class RabbitMQConfig {
         return new Queue(secRepQueue, false);
     }
 
-    @Bean
-    public Queue replyQueue() {
-        return new AnonymousQueue(); // Автоматически создаваемая временная очередь для ответов
-    }
+//    @Bean
+//    public Queue replyQueue() {
+//        return new AnonymousQueue(); // Автоматически создаваемая временная очередь для ответов
+//    }
 
     @Bean
     public Binding secRepBindingNew(TopicExchange exchange) {
@@ -80,22 +80,22 @@ public class RabbitMQConfig {
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
                                          MessageConverter messageConverter) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setReplyAddress(replyQueue().getName());
+//        template.setReplyAddress(replyQueue().getName());
         template.setReplyTimeout(60000);
         template.setMessageConverter(messageConverter);
-        template.setUseDirectReplyToContainer(false); // Отключаем встроенный механизм, если используем свою очередь
+//        template.setUseDirectReplyToContainer(false); // Отключаем встроенный механизм, если используем свою очередь
 
         // Настройка конвертера сообщений (если используете DTO)
         template.setMessageConverter(jsonMessageConverter());
         return template;
     }
-
-    @Bean
-    public SimpleMessageListenerContainer replyListenerContainer(RabbitTemplate rabbitTemplate) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(rabbitTemplate.getConnectionFactory());
-        container.setQueues(replyQueue());
-        container.setMessageListener(rabbitTemplate);
-        return container;
-    }
+//
+//    @Bean
+//    public SimpleMessageListenerContainer replyListenerContainer(RabbitTemplate rabbitTemplate) {
+//        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+//        container.setConnectionFactory(rabbitTemplate.getConnectionFactory());
+//        container.setQueues(replyQueue());
+//        container.setMessageListener(rabbitTemplate);
+//        return container;
+//    }
 }
