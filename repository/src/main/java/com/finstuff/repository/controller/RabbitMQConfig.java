@@ -13,7 +13,6 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Service;
 
 @Configuration
 public class RabbitMQConfig {
@@ -29,14 +28,15 @@ public class RabbitMQConfig {
 
     @Value("${rabbitmq.exchange}")
     private String exchange;
-    @Value("${rabbitmq.queue.sec-rep}")
-    private String secRepQueue;
     @Value("${rabbitmq.queue.rep-sec}")
     private String repSecQueue;
-    @Value("${rabbitmq.routing-key.account.new}")
-    private String rkNew;
+
     @Value("${rabbitmq.routing-key.account.response.new}")
-    private String rkNewRes;
+    private String rkAcNewRes;
+    @Value("${rabbitmq.routing-key.account.response.new}")
+    private String rkAcTitleUpdRes;
+    @Value("${rabbitmq.routing-key.account.response.new}")
+    private String rkAcDelRes;
 
     @Bean
     public TopicExchange exchange() {
@@ -50,7 +50,17 @@ public class RabbitMQConfig {
 
     @Bean
     Binding repSecBindingNewRes(TopicExchange exchange) {
-        return BindingBuilder.bind(repSecQueue()).to(exchange).with(rkNewRes);
+        return BindingBuilder.bind(repSecQueue()).to(exchange).with(rkAcNewRes);
+    }
+
+    @Bean
+    Binding repSecBindingTitleUpdRes(TopicExchange exchange) {
+        return BindingBuilder.bind(repSecQueue()).to(exchange).with(rkAcTitleUpdRes);
+    }
+
+    @Bean
+    Binding repSecBindingDelRes(TopicExchange exchange) {
+        return BindingBuilder.bind(repSecQueue()).to(exchange).with(rkAcDelRes);
     }
 
     @Bean

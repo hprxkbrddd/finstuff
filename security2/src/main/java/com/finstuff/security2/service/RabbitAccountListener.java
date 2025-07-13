@@ -32,6 +32,18 @@ public class RabbitAccountListener {
     )
     public void addResponseHandler(String message, Message msg) throws JsonProcessingException {
         AccountEnlargedDTO response = objectMapper.readValue(message, AccountEnlargedDTO.class);
-        log.info("\n!Repository service ADD response! \n{}\n!Message properties! \n{}\n",message, msg.getMessageProperties());
+        log.info("\n!Repository service ADD response! \n{}\n!Message properties! \n{}\n", message, msg.getMessageProperties());
+    }
+
+    @RabbitListener(
+            bindings = @QueueBinding(
+                    value = @Queue(value = "${rabbitmq.queue.rep-sec}", durable = "false"),
+                    exchange = @Exchange(value = "${rabbitmq.exchange}", type = ExchangeTypes.TOPIC),
+                    key = "${rabbitmq.routing-key.account.response.title-upd}"
+            )
+    )
+    public void updateTitleResponseHandler(String message, Message msg) throws JsonProcessingException {
+        AccountEnlargedDTO response = objectMapper.readValue(message, AccountEnlargedDTO.class);
+        log.info("\n!Repository service TITLE UPDATE response! \n{}\n!Message properties! \n{}\n", message, msg.getMessageProperties());
     }
 }

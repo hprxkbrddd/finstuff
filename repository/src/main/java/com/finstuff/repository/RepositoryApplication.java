@@ -18,10 +18,6 @@ public class RepositoryApplication {
 	@Autowired
 	private Queue repSecQueue;
 
-//	@PostConstruct
-//	public void declareSecRepQueue(){
-//		rabbitAdmin.declareQueue(secRepQueue);
-//	}
 	@PostConstruct
 	public void declareRepSecQueue(){
 		rabbitAdmin.declareQueue(repSecQueue);

@@ -36,10 +36,10 @@ public class RabbitConsumer {
 
     @Value("${rabbitmq.routing-key.account.response.new}")
     private String rkNewRes;
-    @Value("${rabbitmq.routing-key.account.title-upd}")
-    private String rkUpdTitle;
-    @Value("${rabbitmq.routing-key.account.del}")
-    private String rkDel;
+    @Value("${rabbitmq.routing-key.account.response.title-upd}")
+    private String rkUpdTitleRes;
+    @Value("${rabbitmq.routing-key.account.response.del}")
+    private String rkDelRes;
 
 
     @Autowired
@@ -52,7 +52,7 @@ public class RabbitConsumer {
                     key = "${rabbitmq.routing-key.account.new}"
             )
     )
-    public void add(@Payload String message, Message msg){
+    public void add(@Payload String message, Message msg) {
         try {
             log.info("\n!Received account ADD message! \n{}\n!Message properties!\n {}\n", message, msg.getMessageProperties());
             NewAccountDTO dto = objectMapper.readValue(message, NewAccountDTO.class);
@@ -62,27 +62,31 @@ public class RabbitConsumer {
                     rkNewRes,
                     objectMapper.writeValueAsString(res)
             );
+            log.info("\n!Sent response to ADD message! \n{}", res);
         } catch (JsonProcessingException e) {
-            log.error("Account 'add': JSON parsing exception: {}",e.getMessage());
+            log.error("Account 'add': JSON parsing exception: {}", e.getMessage());
         }
     }
 
-//    @RabbitListener(
-//            bindings = @QueueBinding(
-//                    value = @Queue(value = "${rabbitmq.queue.sec-rep}", durable = "false"),
-//                    exchange = @Exchange(value = "${rabbitmq.exchange}", type = ExchangeTypes.TOPIC),
-//                    key = "${rabbitmq.routing-key.account.title-upd}"
-//            )
-//    )
-//    public String updateTitle(@Payload String message, Message msg){
-//        try {
-//            log.info("!Received account TITLE UPDATE message! \nMessage properties -> {}", msg.getMessageProperties());
-//            TitleUpdateDTO dto = objectMapper.readValue(message, TitleUpdateDTO.class);
-//            AccountEnlargedDTO res = accountService.updateTitle(dto.id(), dto.title());
-//            return objectMapper.writeValueAsString(res);
-//        } catch (JsonProcessingException e) {
-//            log.error("Account 'update title': JSON parsing exception: {}",e.getMessage());
-//            return "Account's title is not updated";
-//        }
-//    }
+    @RabbitListener(
+            bindings = @QueueBinding(
+                    value = @Queue(value = "${rabbitmq.queue.sec-rep}", durable = "false"),
+                    exchange = @Exchange(value = "${rabbitmq.exchange}", type = ExchangeTypes.TOPIC),
+                    key = "${rabbitmq.routing-key.account.title-upd}"
+            )
+    )
+    public void updateTitle(@Payload String message, Message msg) {
+        try {
+            log.info("!Received account TITLE UPDATE message! \n{}\n!Message properties!\n {}\n", message, msg.getMessageProperties());
+            TitleUpdateDTO dto = objectMapper.readValue(message, TitleUpdateDTO.class);
+            AccountEnlargedDTO res = accountService.updateTitle(dto.id(), dto.title());
+            rabbitTemplate.convertAndSend(
+                    exchange,
+                    rkUpdTitleRes,
+                    objectMapper.writeValueAsString(res)
+            );
+        } catch (JsonProcessingException e) {
+            log.error("Account 'update title': JSON parsing exception: {}", e.getMessage());
+        }
+    }
 }

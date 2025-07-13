@@ -29,8 +29,13 @@ public class RabbitMQConfig {
     private String exchange;
     @Value("${rabbitmq.queue.sec-rep}")
     private String secRepQueue;
+
     @Value("${rabbitmq.routing-key.account.new}")
-    private String rkNew;
+    private String rkAcNew;
+    @Value("${rabbitmq.routing-key.account.title-upd}")
+    private String rkAcTitleUpd;
+    @Value("${rabbitmq.routing-key.account.del}")
+    private String rkAcDel;
 
     @Bean
     public TopicExchange exchange() {
@@ -42,14 +47,19 @@ public class RabbitMQConfig {
         return new Queue(secRepQueue, false);
     }
 
-//    @Bean
-//    public Queue replyQueue() {
-//        return new AnonymousQueue(); // Автоматически создаваемая временная очередь для ответов
-//    }
-
     @Bean
     public Binding secRepBindingNew(TopicExchange exchange) {
-        return BindingBuilder.bind(secRepQueue()).to(exchange).with(rkNew);
+        return BindingBuilder.bind(secRepQueue()).to(exchange).with(rkAcNew);
+    }
+
+    @Bean
+    public Binding secRepBindingTitleUpd(TopicExchange exchange) {
+        return BindingBuilder.bind(secRepQueue()).to(exchange).with(rkAcTitleUpd);
+    }
+
+    @Bean
+    public Binding secRepBindingDel(TopicExchange exchange) {
+        return BindingBuilder.bind(secRepQueue()).to(exchange).with(rkAcDel);
     }
 
     @Bean
@@ -72,30 +82,14 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public TopicExchange replyExchange() {
-        return new TopicExchange("rpc.exchange");
-    }
-
-    @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
                                          MessageConverter messageConverter) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
-//        template.setReplyAddress(replyQueue().getName());
         template.setReplyTimeout(60000);
         template.setMessageConverter(messageConverter);
-//        template.setUseDirectReplyToContainer(false); // Отключаем встроенный механизм, если используем свою очередь
 
         // Настройка конвертера сообщений (если используете DTO)
         template.setMessageConverter(jsonMessageConverter());
         return template;
     }
-//
-//    @Bean
-//    public SimpleMessageListenerContainer replyListenerContainer(RabbitTemplate rabbitTemplate) {
-//        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-//        container.setConnectionFactory(rabbitTemplate.getConnectionFactory());
-//        container.setQueues(replyQueue());
-//        container.setMessageListener(rabbitTemplate);
-//        return container;
-//    }
 }

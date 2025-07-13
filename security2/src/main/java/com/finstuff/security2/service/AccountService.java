@@ -54,11 +54,6 @@ public class AccountService {
                 exchange,
                 rkNew,
                 objectMapper.writeValueAsString(new NewAccountDTO(title, extractSubject(token)))
-//                m -> {
-//                    m.getMessageProperties().setReplyTo(replyQueue);
-//                    m.getMessageProperties().setCorrelationId(UUID.randomUUID().toString());
-//                    return m;
-//                }
         );
     }
 
@@ -77,16 +72,16 @@ public class AccountService {
     }
 
     public void updateTitle(TitleUpdateDTO dto) throws JsonProcessingException {
-        webClient.put()
-                .uri("/update-title")
-                .bodyValue(dto)
-                .retrieve()
-                .bodyToMono(AccountEnlargedDTO.class);
-//        rabbitTemplate.convertAndSend(
-//                exchange,
-//                rkUpdTitle,
-//                objectMapper.writeValueAsString(dto)
-//        );
+//        webClient.put()
+//                .uri("/update-title")
+//                .bodyValue(dto)
+//                .retrieve()
+//                .bodyToMono(AccountEnlargedDTO.class);
+        rabbitTemplate.convertAndSend(
+                exchange,
+                rkUpdTitle,
+                objectMapper.writeValueAsString(dto)
+        );
     }
 
     public Mono<AccountDTO> delete(String accountId) {
