@@ -2,15 +2,11 @@ package com.finstuff.security2.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.finstuff.security2.dto.AccountDTO;
 import com.finstuff.security2.dto.AccountEnlargedDTO;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.Exchange;
-import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,30 +16,23 @@ public class RabbitAccountListener {
 
     private static final Logger log = LoggerFactory.getLogger(RabbitAccountListener.class);
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @RabbitListener(
-            bindings = @QueueBinding(
-                    value = @Queue(value = "${rabbitmq.queue.rep-sec}", durable = "false"),
-                    exchange = @Exchange(value = "${rabbitmq.exchange}", type = ExchangeTypes.TOPIC),
-                    key = "${rabbitmq.routing-key.account.response.new}"
-            )
-    )
-    public void addResponseHandler(String message, Message msg) throws JsonProcessingException {
-        AccountEnlargedDTO response = objectMapper.readValue(message, AccountEnlargedDTO.class);
-        log.info("\n!Repository service ADD response! \n{}\n!Message properties! \n{}\n", message, msg.getMessageProperties());
+    @RabbitListener(queues = {"${rabbitmq.acc.queue.rep-sec.new}"})
+    public void addResponseHandler(AccountEnlargedDTO dto, Message msg) throws JsonProcessingException {
+        log.info("\n!\nRepository service ADD response\n!{}!\nMessage properties\n!{}!\n",
+                objectMapper.writeValueAsString(dto), msg.getMessageProperties());
     }
 
-    @RabbitListener(
-            bindings = @QueueBinding(
-                    value = @Queue(value = "${rabbitmq.queue.rep-sec}", durable = "false"),
-                    exchange = @Exchange(value = "${rabbitmq.exchange}", type = ExchangeTypes.TOPIC),
-                    key = "${rabbitmq.routing-key.account.response.title-upd}"
-            )
-    )
-    public void updateTitleResponseHandler(String message, Message msg) throws JsonProcessingException {
-        AccountEnlargedDTO response = objectMapper.readValue(message, AccountEnlargedDTO.class);
-        log.info("\n!Repository service TITLE UPDATE response! \n{}\n!Message properties! \n{}\n", message, msg.getMessageProperties());
+    @RabbitListener(queues = {"${rabbitmq.acc.queue.rep-sec.title-upd}"})
+    public void updateTitleResponseHandler(AccountEnlargedDTO dto, Message msg) throws JsonProcessingException {
+        log.info("\n!\nRepository service TITLE UPDATE response\n!\n{}\n!\nMessage properties\n!{}!\n",
+                objectMapper.writeValueAsString(dto), msg.getMessageProperties());
+    }
+
+    @RabbitListener(queues = {"${rabbitmq.acc.queue.rep-sec.del}"})
+    public void delResponseHandler(AccountDTO dto, Message msg) throws JsonProcessingException {
+        log.info("\n!\nRepository service DELETE response\n!\n{}\n!\nMessage properties\n!{}!\n",
+                objectMapper.writeValueAsString(dto), msg.getMessageProperties());
     }
 }

@@ -115,8 +115,8 @@ public class AccountController {
             }
     )
     @DeleteMapping("/delete/{accountId}")
-    public Mono<ResponseEntity<AccountDTO>> delete(@PathVariable String accountId) {
-        return accountService.delete(accountId)
-                .map(ResponseEntity::ok);
+    public ResponseEntity<AccountDTO> delete(@PathVariable String accountId) {
+        accountService.delete(accountId);
+        return ResponseEntity.ok().build();
     }
 }

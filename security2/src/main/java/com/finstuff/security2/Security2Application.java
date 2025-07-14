@@ -14,11 +14,17 @@ public class Security2Application {
 	private RabbitAdmin rabbitAdmin;
 
 	@Autowired
-	private Queue secRepQueue;
+	private Queue secRepAcNewQueue;
+	@Autowired
+	private Queue secRepAcTitleUpdQueue;
+	@Autowired
+	private Queue secRepAcDelQueue;
 
 	@PostConstruct
 	public void declareQueue(){
-		rabbitAdmin.declareQueue(secRepQueue);
+		rabbitAdmin.declareQueue(secRepAcNewQueue);
+        rabbitAdmin.declareQueue(secRepAcTitleUpdQueue);
+        rabbitAdmin.declareQueue(secRepAcDelQueue);
 	}
 
 	public static void main(String[] args) {

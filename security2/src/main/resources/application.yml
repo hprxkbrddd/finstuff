@@ -33,24 +33,42 @@ server:
   port: 8081
 
 rabbitmq:
-  queue:
-    sec-rep: security-repository-queue
-    rep-sec: repository-security-queue
-  exchange: finstuff_exchange
+  acc:
+    exchange: finstuff-account-exchange
+    queue:
+      sec-rep:
+        new: security-repository-account-new-queue
+        title-upd: security-repository-account-title-update-queue
+        del: security-repository-account-del-queue
+      rep-sec:
+        new: repository-security-account-new-response-queue
+        title-upd: repository-security-account-title-update-response-queue
+        del: repository-security-account-del-response-queue
+  trans:
+    exchange: finstuff-transaction-exchange
+    queue:
+      sec-rep:
+        new: security-repository-transaction-new-queue
+        title-upd: security-repository-transaction-title-update-queue
+        amnt-upd: security-repository-transaction-amount-update-queue
+        del: security-repository-transaction-del-queue
+      rep-sec:
+        new: repository-security-transaction-new-response-queue
+        title-upd: repository-security-transaction-title-update-response-queue
+        amnt-upd: repository-security-transaction-amount-update-response-queue
+        del: repository-security-transaction-del-response-queue
   routing-key:
-    account:
-      new: new-account
-      title-upd: update-account-title
-      del: delete-account
-      response:
-        new: response-new-account
-        title-upd: response-update-account-title
-        del: response-delete-account
-    transaction:
-      new: new-transaction
-      title-upd: update-transaction-title
-      amount-upd: update-transaction-amount
-      del: delete-transaction
+    sec-rep:
+      new: new
+      title-upd: update-title
+      amnt-upd: update-amount
+      del: delete
+    rep-sec:
+      new: new-response
+      title-upd: update-title-response
+      amnt-upd: update-amount-response
+      del: delete-response
+
 
 # Дополнительные настройки Keycloak (если нужен доступ к Admin API)
 #keycloak:

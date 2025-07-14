@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    // CONNECTION DATA
     @Value("${spring.rabbitmq.host}")
     private String host;
     @Value("${spring.rabbitmq.port}")
@@ -25,41 +26,69 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.password}")
     private String password;
 
-    @Value("${rabbitmq.exchange}")
-    private String exchange;
-    @Value("${rabbitmq.queue.sec-rep}")
-    private String secRepQueue;
+    // EXCHANGES
+    @Value("${rabbitmq.acc.exchange}")
+    private String accExchange;
+    @Value("${rabbitmq.trans.exchange}")
+    private String transExchange;
 
-    @Value("${rabbitmq.routing-key.account.new}")
-    private String rkAcNew;
-    @Value("${rabbitmq.routing-key.account.title-upd}")
-    private String rkAcTitleUpd;
-    @Value("${rabbitmq.routing-key.account.del}")
-    private String rkAcDel;
+    // ACCOUNT QUEUES
+    @Value("${rabbitmq.acc.queue.sec-rep.new}")
+    private String secRepAcNewQueue;
+    @Value("${rabbitmq.acc.queue.sec-rep.title-upd}")
+    private String secRepAcTitleUpdQueue;
+    @Value("${rabbitmq.acc.queue.sec-rep.del}")
+    private String secRepAcDelQueue;
+
+    // TRANSACTION QUEUES
+    @Value("${rabbitmq.trans.queue.sec-rep.new}")
+    private String secRepTrNewQueue;
+    @Value("${rabbitmq.trans.queue.sec-rep.title-upd}")
+    private String secRepTrTitleUpdQueue;
+    @Value("${rabbitmq.trans.queue.sec-rep.del}")
+    private String secRepTrDelQueue;
+
+    // ROUTING KEYS
+    @Value("${rabbitmq.routing-key.sec-rep.new}")
+    private String rkNew;
+    @Value("${rabbitmq.routing-key.sec-rep.title-upd}")
+    private String rkTitleUpd;
+    @Value("${rabbitmq.routing-key.sec-rep.del}")
+    private String rkDel;
 
     @Bean
-    public TopicExchange exchange() {
-        return new TopicExchange(exchange);
+    public TopicExchange accExchange() {
+        return new TopicExchange(accExchange);
     }
 
     @Bean
-    public Queue secRepQueue() {
-        return new Queue(secRepQueue, false);
+    public Queue secRepAcNewQueue() {
+        return new Queue(secRepAcNewQueue, false);
     }
 
     @Bean
-    public Binding secRepBindingNew(TopicExchange exchange) {
-        return BindingBuilder.bind(secRepQueue()).to(exchange).with(rkAcNew);
+    public Queue secRepAcTitleUpdQueue() {
+        return new Queue(secRepAcTitleUpdQueue, false);
     }
 
     @Bean
-    public Binding secRepBindingTitleUpd(TopicExchange exchange) {
-        return BindingBuilder.bind(secRepQueue()).to(exchange).with(rkAcTitleUpd);
+    public Queue secRepAcDelQueue() {
+        return new Queue(secRepAcDelQueue, false);
     }
 
     @Bean
-    public Binding secRepBindingDel(TopicExchange exchange) {
-        return BindingBuilder.bind(secRepQueue()).to(exchange).with(rkAcDel);
+    public Binding secRepAcNewBinding() {
+        return BindingBuilder.bind(secRepAcNewQueue()).to(accExchange()).with(rkNew);
+    }
+
+    @Bean
+    public Binding secRepAcTitleUpdBinding() {
+        return BindingBuilder.bind(secRepAcTitleUpdQueue()).to(accExchange()).with(rkTitleUpd);
+    }
+
+    @Bean
+    public Binding secRepAcDelBinding() {
+        return BindingBuilder.bind(secRepAcDelQueue()).to(accExchange()).with(rkDel);
     }
 
     @Bean

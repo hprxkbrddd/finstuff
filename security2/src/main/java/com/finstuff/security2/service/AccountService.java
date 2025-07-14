@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finstuff.security2.component.JWTDecoder;
 import com.finstuff.security2.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,28 +15,25 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AccountService {
+    private static final Logger log = LoggerFactory.getLogger(AccountService.class);
     private final WebClient webClient = WebClient.create("http://localhost:8082/repo/accounts");
     private final JWTDecoder decoder = new JWTDecoder();
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.exchange}")
-    private String exchange;
+    @Value("${rabbitmq.acc.exchange}")
+    private String accExchange;
 
-    @Value("${rabbitmq.queue.rep-sec}")
-    private String replyQueue;
-
-    @Value("${rabbitmq.routing-key.account.new}")
+    @Value("${rabbitmq.routing-key.sec-rep.new}")
     private String rkNew;
-    @Value("${rabbitmq.routing-key.account.title-upd}")
+    @Value("${rabbitmq.routing-key.sec-rep.title-upd}")
     private String rkUpdTitle;
-    @Value("${rabbitmq.routing-key.account.del}")
+    @Value("${rabbitmq.routing-key.sec-rep.del}")
     private String rkDel;
 
     private String extractSubject(String token) {
@@ -50,11 +49,14 @@ public class AccountService {
     }
 
     public void create(String token, String title) throws JsonProcessingException {
+        log.info("\n!\nSending account ADD message\n!");
+        NewAccountDTO dto = new NewAccountDTO(title, extractSubject(token));
         rabbitTemplate.convertAndSend(
-                exchange,
+                accExchange,
                 rkNew,
-                objectMapper.writeValueAsString(new NewAccountDTO(title, extractSubject(token)))
+                dto
         );
+        log.info("\n!\nAccount ADD message sent\n!{}!",objectMapper.writeValueAsString(dto));
     }
 
     public Mono<AccountEnlargedDTO> getById(String id) {
@@ -72,22 +74,22 @@ public class AccountService {
     }
 
     public void updateTitle(TitleUpdateDTO dto) throws JsonProcessingException {
-//        webClient.put()
-//                .uri("/update-title")
-//                .bodyValue(dto)
-//                .retrieve()
-//                .bodyToMono(AccountEnlargedDTO.class);
+        log.info("\n!\nSending account TITLE UPDATE message\n!");
         rabbitTemplate.convertAndSend(
-                exchange,
+                accExchange,
                 rkUpdTitle,
-                objectMapper.writeValueAsString(dto)
+                dto
         );
+        log.info("\n!\nAccount TITLE UPDATE message sent\n!{}!",objectMapper.writeValueAsString(dto));
     }
 
-    public Mono<AccountDTO> delete(String accountId) {
-        return webClient.delete()
-                .uri("/delete/" + accountId)
-                .retrieve()
-                .bodyToMono(AccountDTO.class);
+    public void delete (String accountId) {
+        log.info("\n!\nSending account DELETE message\n!");
+        rabbitTemplate.convertAndSend(
+                accExchange,
+                rkDel,
+                accountId
+        );
+        log.info("\n!\nAccount DELETE message sent\n!{}!",accountId);
     }
 }
