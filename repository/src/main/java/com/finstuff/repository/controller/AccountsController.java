@@ -32,19 +32,4 @@ public class AccountsController {
                 accounts.accountList().isEmpty() ?
                 HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
-
-//    @PostMapping("/add")
-//    public ResponseEntity<AccountEnlargedDTO> addAccount(@RequestBody NewAccountDTO dto){
-//        return new ResponseEntity<>(service.addAccount(dto.title(), dto.ownedByUserId()), HttpStatus.CREATED);
-//    }
-
-    @PutMapping("/update-title")
-    public ResponseEntity<AccountEnlargedDTO> updateTitle(@RequestBody TitleUpdateDTO dto){
-        return new ResponseEntity<>(service.updateTitle(dto.id(), dto.title()), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<AccountDTO> delete(@PathVariable String id){
-        return new ResponseEntity<>(service.deleteAccount(id), HttpStatus.OK);
-    }
 }

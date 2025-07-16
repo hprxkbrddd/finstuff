@@ -46,22 +46,34 @@ public class RabbitMQConfig {
     private String repSecTrNewQueue;
     @Value("${rabbitmq.trans.queue.rep-sec.title-upd}")
     private String repSecTrTitleUpdQueue;
+    @Value("${rabbitmq.trans.queue.rep-sec.amnt-upd}")
+    private String repSecTrAmntUpdQueue;
     @Value("${rabbitmq.trans.queue.rep-sec.del}")
     private String repSecTrDelQueue;
+
 
     // ROUTING KEYS
     @Value("${rabbitmq.routing-key.rep-sec.new}")
     private String rkNew;
     @Value("${rabbitmq.routing-key.rep-sec.title-upd}")
     private String rkTitleUpd;
+    @Value("${rabbitmq.routing-key.rep-sec.amnt-upd}")
+    private String rkAmntUpd;
     @Value("${rabbitmq.routing-key.rep-sec.del}")
     private String rkDel;
 
+    // EXCHANGES BEANS
     @Bean
     public TopicExchange accExchange() {
         return new TopicExchange(accExchange);
     }
 
+    @Bean
+    public TopicExchange transExchange(){
+        return new TopicExchange(transExchange);
+    }
+
+    // ACCOUNT QUEUES BEANS
     @Bean
     public Queue repSecAcNewQueue() {
         return new Queue(repSecAcNewQueue, false);
@@ -77,6 +89,28 @@ public class RabbitMQConfig {
         return new Queue(repSecAcDelQueue, false);
     }
 
+    // TRANSACTION QUEUES BEANS
+    @Bean
+    public Queue repSecTrNewQueue() {
+        return new Queue(repSecTrNewQueue, false);
+    }
+
+    @Bean
+    public Queue repSecTrTitleUpdQueue() {
+        return new Queue(repSecTrTitleUpdQueue, false);
+    }
+
+    @Bean
+    public Queue repSecTrAmntUpdQueue() {
+        return new Queue(repSecTrAmntUpdQueue, false);
+    }
+
+    @Bean
+    public Queue repSecTrDelQueue() {
+        return new Queue(repSecTrDelQueue, false);
+    }
+
+    // ACCOUNT BINDINGS
     @Bean
     Binding repSecAcNewResBinding() {
         return BindingBuilder.bind(repSecAcNewQueue()).to(accExchange()).with(rkNew);
@@ -92,6 +126,28 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(repSecAcDelQueue()).to(accExchange()).with(rkDel);
     }
 
+    // TRANSACTION BINDINGS
+    @Bean
+    Binding repSecTrNewResBinding() {
+        return BindingBuilder.bind(repSecTrNewQueue()).to(transExchange()).with(rkNew);
+    }
+
+    @Bean
+    Binding repSecTrTitleUpdResBinding() {
+        return BindingBuilder.bind(repSecTrTitleUpdQueue()).to(transExchange()).with(rkTitleUpd);
+    }
+
+    @Bean
+    Binding repSecTrAmntUpdResBinding() {
+        return BindingBuilder.bind(repSecTrAmntUpdQueue()).to(transExchange()).with(rkAmntUpd);
+    }
+
+    @Bean
+    Binding repSecTrDelResBinding() {
+        return BindingBuilder.bind(repSecTrDelQueue()).to(transExchange()).with(rkDel);
+    }
+
+    // OTHER BEANS
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();

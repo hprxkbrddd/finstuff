@@ -1,5 +1,6 @@
 package com.finstuff.security2.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.finstuff.security2.dto.*;
 import com.finstuff.security2.service.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,9 +77,9 @@ public class TransactionController {
             }
     )
     @PostMapping("/add")
-    public Mono<ResponseEntity<TransactionEnlargedDTO>> add(@RequestBody NewTransactionDTO dto) {
-        return service.add(dto)
-                .map(ResponseEntity::ok);
+    public ResponseEntity<TransactionEnlargedDTO> add(@RequestBody NewTransactionDTO dto) throws JsonProcessingException {
+        service.add(dto);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(
@@ -91,9 +92,9 @@ public class TransactionController {
             }
     )
     @PutMapping("/update-title")
-    public Mono<ResponseEntity<TitleUpdateDTO>> updateTitle(@RequestBody TitleUpdateDTO dto) {
-        return service.updateTitle(dto)
-                .map(ResponseEntity::ok);
+    public ResponseEntity<TitleUpdateDTO> updateTitle(@RequestBody TitleUpdateDTO dto) throws JsonProcessingException {
+        service.updateTitle(dto);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(
@@ -106,9 +107,9 @@ public class TransactionController {
             }
     )
     @PutMapping("/update-amount")
-    public Mono<ResponseEntity<AmountUpdateDTO>> updateAmount(@RequestBody AmountUpdateDTO dto) {
-        return service.updateAmount(dto)
-                .map(ResponseEntity::ok);
+    public ResponseEntity<AmountUpdateDTO> updateAmount(@RequestBody AmountUpdateDTO dto) throws JsonProcessingException {
+        service.updateAmnt(dto);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(
@@ -120,8 +121,8 @@ public class TransactionController {
             }
     )
     @DeleteMapping("/delete/{id}")
-    public Mono<ResponseEntity<String>> delete(@PathVariable String id) {
-        return service.deleteTransaction(id)
-                .map(ResponseEntity::ok);
+    public ResponseEntity<TransactionEnlargedDTO> delete(@PathVariable String id) {
+        service.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

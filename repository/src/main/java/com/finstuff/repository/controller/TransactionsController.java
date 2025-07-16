@@ -34,38 +34,4 @@ public class TransactionsController {
                 res.transactionList().isEmpty()?
                         HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
-
-    @PostMapping("/add")
-    public ResponseEntity<TransactionEnlargedDTO> add(@RequestBody NewTransactionDTO dto) {
-        return new ResponseEntity<>(
-                service.add(
-                        dto.title(),
-                        dto.amount(),
-                        dto.accountId()
-                ),
-                HttpStatus.CREATED);
-    }
-
-    @PutMapping("/update-title")
-    public ResponseEntity<TitleUpdateDTO> updateTitle(@RequestBody TitleUpdateDTO dto) {
-        TransactionEnlargedDTO result = service.updateTitle(dto.id(), dto.title());
-        return ResponseEntity.ok(new TitleUpdateDTO(
-                result.id(),
-                result.title()
-        ));
-    }
-
-    @PutMapping("/update-amount")
-    public ResponseEntity<AmountUpdateDTO> updateTitle(@RequestBody AmountUpdateDTO dto) {
-        TransactionEnlargedDTO result = service.updateAmount(dto.id(), dto.amount());
-        return ResponseEntity.ok(new AmountUpdateDTO(
-                result.id(),
-                result.amount()
-        ));
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<TransactionEnlargedDTO> delete(@PathVariable String id) {
-        return ResponseEntity.ok(service.delete(id));
-    }
 }

@@ -19,12 +19,24 @@ public class Security2Application {
 	private Queue secRepAcTitleUpdQueue;
 	@Autowired
 	private Queue secRepAcDelQueue;
+	@Autowired
+	private Queue secRepTrNewQueue;
+	@Autowired
+	private Queue secRepTrTitleUpdQueue;
+	@Autowired
+	private Queue secRepTrAmntUpdQueue;
+	@Autowired
+	private Queue secRepTrDelQueue;
 
 	@PostConstruct
 	public void declareQueue(){
 		rabbitAdmin.declareQueue(secRepAcNewQueue);
         rabbitAdmin.declareQueue(secRepAcTitleUpdQueue);
         rabbitAdmin.declareQueue(secRepAcDelQueue);
+		rabbitAdmin.declareQueue(secRepTrNewQueue);
+		rabbitAdmin.declareQueue(secRepTrTitleUpdQueue);
+		rabbitAdmin.declareQueue(secRepTrAmntUpdQueue);
+		rabbitAdmin.declareQueue(secRepTrDelQueue);
 	}
 
 	public static void main(String[] args) {

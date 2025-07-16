@@ -29,6 +29,10 @@ spring:
     username: finstuff
     password: finstuff
 
+url:
+  repository: http://localhost:8082/repo/accounts
+  keycloak: http://localhost:8080/realms/finstuff/protocol/openid-connect
+
 server:
   port: 8081
 

@@ -26,6 +26,7 @@ public class AccountService {
     private final AccountsRepository accountsRepository;
     private final TransactionsRepository transactionsRepository;
 
+    // GET ALL ACCOUNTS
     public UserAccountsDTO getAll() {
         return new UserAccountsDTO(accountsRepository.findAll()
                 .stream().map(acc ->
@@ -37,6 +38,7 @@ public class AccountService {
                 ).toList());
     }
 
+    // CREATE ACCOUNT
     @Caching(
             put = @CachePut(value = "account", key = "#result.id"),
             evict = @CacheEvict(value = "accounts_of_user", key = "#ownedByUserId")
@@ -55,6 +57,7 @@ public class AccountService {
         );
     }
 
+    // GET ACCOUNT BY ID
     @Cacheable(value = "account", key = "#id")
     public AccountEnlargedDTO getById(String id) {
         Account account = accountsRepository.findById(id)
@@ -68,11 +71,13 @@ public class AccountService {
 
     }
 
+    // CALCULATE ACCOUNT BALANCE
     private BigDecimal getAccountBalance(String id) {
         return transactionsRepository.getAccountBalance(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-" + id + " is not found"));
     }
 
+    // GET ACCOUNTS OF USER
     @Cacheable(value = "accounts_of_user", key = "#ownerId")
     public List<AccountDTO> getByOwnerId(String ownerId) {
         List<Account> accounts = accountsRepository.findByOwnedByUserId(ownerId)
@@ -86,6 +91,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
+    // UPDATE ACCOUNT TITLE
     @Transactional
     @Caching(
             put = @CachePut(value = "account", key = "#id"),
@@ -103,6 +109,7 @@ public class AccountService {
         );
     }
 
+    // DELETE ACCOUNT
     @Transactional
     @Caching(
             evict = {
@@ -110,10 +117,15 @@ public class AccountService {
                     @CacheEvict(value = "accounts_of_user", key = "#result.ownedByUserId")
             }
     )
-    public AccountDTO deleteAccount(String id) {
+    public AccountEnlargedDTO deleteAccount(String id) {
         Account account = accountsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-" + id + " is not found. Account is not deleted"));
         accountsRepository.deleteById(id);
-        return new AccountDTO(account.getId(), account.getTitle(), account.getOwnedByUserId());
+        return new AccountEnlargedDTO(
+                account.getId(),
+                account.getTitle(),
+                account.getOwnedByUserId(),
+                BigDecimal.ZERO
+        );
     }
 }

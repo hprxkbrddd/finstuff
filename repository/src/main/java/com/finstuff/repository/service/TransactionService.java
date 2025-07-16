@@ -26,6 +26,7 @@ public class TransactionService {
 
     private final TransactionsRepository transactionsRepository;
 
+    // GET ALL TRANSACTIONS
     public AccountTransactionsDTO getAll() {
         return new AccountTransactionsDTO(transactionsRepository.findAll()
                 .stream().map(transaction -> new TransactionDTO(
@@ -36,6 +37,7 @@ public class TransactionService {
         );
     }
 
+    // GET TRANSACTION BY ID
     @Cacheable(value = "transaction", key = "#id")
     public TransactionEnlargedDTO getById(String id) {
         Transaction res = transactionsRepository.findById(id)
@@ -49,6 +51,7 @@ public class TransactionService {
         );
     }
 
+    // GET TRANSACTIONS OF THE ACCOUNT
     @Cacheable(value = "account_transactions", key = "#accountId")
     public AccountTransactionsDTO getByAccountId(String accountId) {
         List<Transaction> res = transactionsRepository.findByAccountId(accountId)
@@ -62,6 +65,7 @@ public class TransactionService {
         ).collect(Collectors.toList()));
     }
 
+    // CREATE TRANSACTION
     @Caching(
             put = @CachePut(value = "transaction", key = "#result.id"),
             evict = @CacheEvict(value = "account_transactions", key = "#accountId")
@@ -85,6 +89,7 @@ public class TransactionService {
         );
     }
 
+    // UPDATE TITLE OF THE TRANSACTION
     @Transactional
     @Caching(
             put = @CachePut(value = "transaction", key = "#result.id"),
@@ -103,6 +108,7 @@ public class TransactionService {
         );
     }
 
+    // UPDATE AMOUNT OF THE TRANSACTION
     @Transactional
     @Caching(
             put = @CachePut(value = "transaction", key = "#result.id"),
@@ -121,6 +127,7 @@ public class TransactionService {
         );
     }
 
+    // DELETE TRANSACTION
     @Transactional
     @Caching(
             evict = {

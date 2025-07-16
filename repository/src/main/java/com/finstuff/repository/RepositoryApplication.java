@@ -22,13 +22,25 @@ public class RepositoryApplication {
 	private Queue repSecAcTitleUpdQueue;
 	@Autowired
 	private Queue repSecAcDelQueue;
+	@Autowired
+	private Queue repSecTrNewQueue;
+	@Autowired
+	private Queue repSecTrTitleUpdQueue;
+	@Autowired
+	private Queue repSecTrAmntUpdQueue;
+	@Autowired
+	private Queue repSecTrDelQueue;
 
 
 	@PostConstruct
 	public void declareRepSecQueue(){
-		rabbitAdmin.declareQueue(repSecAcDelQueue);
+		rabbitAdmin.declareQueue(repSecAcNewQueue);
 		rabbitAdmin.declareQueue(repSecAcTitleUpdQueue);
 		rabbitAdmin.declareQueue(repSecAcDelQueue);
+		rabbitAdmin.declareQueue(repSecTrNewQueue);
+		rabbitAdmin.declareQueue(repSecTrTitleUpdQueue);
+		rabbitAdmin.declareQueue(repSecTrAmntUpdQueue);
+		rabbitAdmin.declareQueue(repSecTrDelQueue);
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(RepositoryApplication.class, args);

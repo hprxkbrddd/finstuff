@@ -1,6 +1,7 @@
 package com.finstuff.security2.service;
 
 import com.finstuff.security2.dto.TokenResponseDTO;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -15,7 +16,11 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final WebClient webClient = WebClient.create("http://localhost:8080/realms/finstuff/protocol/openid-connect");
+    @Value("${url.keycloak}")
+    @NonNull
+    private String keycloakURL;
+
+    private final WebClient webClient = WebClient.create(keycloakURL);
     @Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
     private String clientId;
     @Value("${spring.security.oauth2.client.registration.keycloak.client-secret}")
