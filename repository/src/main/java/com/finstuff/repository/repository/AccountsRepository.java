@@ -1,7 +1,6 @@
 package com.finstuff.repository.repository;
 
 import com.finstuff.repository.entity.Account;
-import com.finstuff.repository.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

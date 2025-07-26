@@ -2,15 +2,13 @@ spring:
   application:
     name: repository
   datasource:
-    url: jdbc:postgresql://localhost:5433/keycloak
+    url: jdbc:postgresql://postgres:5432/keycloak  # изменил порт на стандартный 5432
     username: keycloak
     password: keycloak
   data:
     redis:
-      host: localhost
+      host: redis  # имя сервиса в docker-compose
       port: 6379
-      # username:
-      # password:
   cache:
     type: redis
   doc:
@@ -19,7 +17,7 @@ spring:
       version: 1.0.0
       description: repository microservice for finstuff web application
   rabbitmq:
-    host: localhost
+    host: rabbitmq  # имя сервиса
     port: 5672
     username: finstuff
     password: finstuff
@@ -27,6 +25,7 @@ spring:
 server:
   port: 8082
 
+# Конфигурация RabbitMQ остаётся без изменений
 rabbitmq:
   acc:
     exchange: finstuff-account-exchange
@@ -63,3 +62,68 @@ rabbitmq:
       title-upd: update-title-response
       amnt-upd: update-amount-response
       del: delete-response
+#spring:
+#  application:
+#    name: repository
+#  datasource:
+#    url: jdbc:postgresql://localhost:5433/keycloak
+#    username: keycloak
+#    password: keycloak
+#  data:
+#    redis:
+#      host: localhost
+#      port: 6379
+#      # username:
+#      # password:
+#  cache:
+#    type: redis
+#  doc:
+#    info:
+#      title: finstuff-repo
+#      version: 1.0.0
+#      description: repository microservice for finstuff web application
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: finstuff
+#    password: finstuff
+#
+#server:
+#  port: 8082
+#
+#rabbitmq:
+#  acc:
+#    exchange: finstuff-account-exchange
+#    queue:
+#      sec-rep:
+#        new: security-repository-account-new-queue
+#        title-upd: security-repository-account-title-update-queue
+#        del: security-repository-account-del-queue
+#      rep-sec:
+#        new: repository-security-account-new-response-queue
+#        title-upd: repository-security-account-title-update-response-queue
+#        del: repository-security-account-del-response-queue
+#  trans:
+#    exchange: finstuff-transaction-exchange
+#    queue:
+#      sec-rep:
+#        new: security-repository-transaction-new-queue
+#        title-upd: security-repository-transaction-title-update-queue
+#        amnt-upd: security-repository-transaction-amount-update-queue
+#        del: security-repository-transaction-del-queue
+#      rep-sec:
+#        new: repository-security-transaction-new-response-queue
+#        title-upd: repository-security-transaction-title-update-response-queue
+#        amnt-upd: repository-security-transaction-amount-update-response-queue
+#        del: repository-security-transaction-del-response-queue
+#  routing-key:
+#    sec-rep:
+#      new: new
+#      title-upd: update-title
+#      amnt-upd: update-amount
+#      del: delete
+#    rep-sec:
+#      new: new-response
+#      title-upd: update-title-response
+#      amnt-upd: update-amount-response
+#      del: delete-response

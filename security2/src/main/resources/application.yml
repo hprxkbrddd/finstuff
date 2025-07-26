@@ -5,8 +5,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/finstuff
-          jwk-set-uri: http://localhost:8080/realms/finstuff/protocol/openid-connect/certs
+          issuer-uri: http://keycloak:8080/realms/finstuff  # имя сервиса
+          jwk-set-uri: http://keycloak:8080/realms/finstuff/protocol/openid-connect/certs
       client:
         registration:
           keycloak:
@@ -17,25 +17,26 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
         provider:
           keycloak:
-            issuer-uri: http://localhost:8080/realms/finstuff
+            issuer-uri: http://keycloak:8080/realms/finstuff
             user-name-attribute: preferred_username
-  datasource:
-    url: jdbc:postgresql://localhost:5432/nikitas_db
-    username: postgres
-    password: postgres
   rabbitmq:
-    host: localhost
+    host: rabbitmq # имя сервиса
     port: 5672
     username: finstuff
     password: finstuff
+  datasource:
+    url: jdbc:postgresql://postgres:5432/nikitas_db  # имя сервиса
+    username: postgres
+    password: postgres
 
 url:
-  repository: http://localhost:8082/repo/accounts
-  keycloak: http://localhost:8080/realms/finstuff/protocol/openid-connect
+  repository: http://repository:8082/repo/accounts  # имя сервиса
+  keycloak: http://keycloak:8080/realms/finstuff/protocol/openid-connect
 
 server:
   port: 8081
 
+# Конфигурация RabbitMQ остаётся без изменений
 rabbitmq:
   acc:
     exchange: finstuff-account-exchange
@@ -72,10 +73,80 @@ rabbitmq:
       title-upd: update-title-response
       amnt-upd: update-amount-response
       del: delete-response
-
-
-# Дополнительные настройки Keycloak (если нужен доступ к Admin API)
-#keycloak:
-#  auth-server-url: http://localhost:8080
-#  realm: finstuff
-#jwkSetUri: http://localhost:8080/realms/finstuff/protocol/openid-connect/certs
+#spring:
+#  application:
+#    name: security2
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8080/realms/finstuff
+#          jwk-set-uri: http://localhost:8080/realms/finstuff/protocol/openid-connect/certs
+#      client:
+#        registration:
+#          keycloak:
+#            client-id: ${CLIENT_ID:finstuff-client}
+#            client-secret: ${CLIENT_SECRET:XczD2Tr18efVSYXYklOvp5tjncpka13x}
+#            authorization-grant-type: authorization_code
+#            scope: openid,profile,email
+#            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+#        provider:
+#          keycloak:
+#            issuer-uri: http://localhost:8080/realms/finstuff
+#            user-name-attribute: preferred_username
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: finstuff
+#    password: finstuff
+#
+#url:
+#  repository: http://localhost:8082/repo/accounts
+#  keycloak: http://localhost:8080/realms/finstuff/protocol/openid-connect
+#
+#server:
+#  port: 8081
+#
+#rabbitmq:
+#  acc:
+#    exchange: finstuff-account-exchange
+#    queue:
+#      sec-rep:
+#        new: security-repository-account-new-queue
+#        title-upd: security-repository-account-title-update-queue
+#        del: security-repository-account-del-queue
+#      rep-sec:
+#        new: repository-security-account-new-response-queue
+#        title-upd: repository-security-account-title-update-response-queue
+#        del: repository-security-account-del-response-queue
+#  trans:
+#    exchange: finstuff-transaction-exchange
+#    queue:
+#      sec-rep:
+#        new: security-repository-transaction-new-queue
+#        title-upd: security-repository-transaction-title-update-queue
+#        amnt-upd: security-repository-transaction-amount-update-queue
+#        del: security-repository-transaction-del-queue
+#      rep-sec:
+#        new: repository-security-transaction-new-response-queue
+#        title-upd: repository-security-transaction-title-update-response-queue
+#        amnt-upd: repository-security-transaction-amount-update-response-queue
+#        del: repository-security-transaction-del-response-queue
+#  routing-key:
+#    sec-rep:
+#      new: new
+#      title-upd: update-title
+#      amnt-upd: update-amount
+#      del: delete
+#    rep-sec:
+#      new: new-response
+#      title-upd: update-title-response
+#      amnt-upd: update-amount-response
+#      del: delete-response
+#
+#
+## Дополнительные настройки Keycloak (если нужен доступ к Admin API)
+##keycloak:
+##  auth-server-url: http://localhost:8080
+##  realm: finstuff
+##jwkSetUri: http://localhost:8080/realms/finstuff/protocol/openid-connect/certs

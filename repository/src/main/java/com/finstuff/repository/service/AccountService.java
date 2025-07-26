@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class AccountService {
     private final AccountsRepository accountsRepository;
     private final TransactionsRepository transactionsRepository;
+    private final IdGenerator idGenerator;
 
     // GET ALL ACCOUNTS
     public UserAccountsDTO getAll() {
@@ -44,8 +45,10 @@ public class AccountService {
             evict = @CacheEvict(value = "accounts_of_user", key = "#ownedByUserId")
     )
     public AccountEnlargedDTO addAccount(String title, String ownedByUserId) {
+        if (title.isBlank() || ownedByUserId.isBlank())
+            throw new IllegalArgumentException("Blank fields");
         Account account = new Account();
-        account.setId(IdGenerator.generateId());
+        account.setId(idGenerator.generateId());
         account.setTitle(title);
         account.setOwnedByUserId(ownedByUserId);
         accountsRepository.save(account);
@@ -53,13 +56,14 @@ public class AccountService {
                 account.getId(),
                 account.getTitle(),
                 account.getOwnedByUserId(),
-                getAccountBalance(account.getId())
+                BigDecimal.ZERO
         );
     }
 
     // GET ACCOUNT BY ID
     @Cacheable(value = "account", key = "#id")
     public AccountEnlargedDTO getById(String id) {
+        if (id.isBlank()) throw new IllegalArgumentException("Blank fields");
         Account account = accountsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-" + id + " is not found"));
         return new AccountEnlargedDTO(
@@ -80,6 +84,7 @@ public class AccountService {
     // GET ACCOUNTS OF USER
     @Cacheable(value = "accounts_of_user", key = "#ownerId")
     public List<AccountDTO> getByOwnerId(String ownerId) {
+        if (ownerId.isBlank()) throw new IllegalArgumentException("Blank fields");
         List<Account> accounts = accountsRepository.findByOwnedByUserId(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException("Owner:id-" + ownerId + " is not found"));
         return accounts.stream()
@@ -98,9 +103,11 @@ public class AccountService {
             evict = @CacheEvict(value = "accounts_of_user", key = "#result.ownedByUserId")
     )
     public AccountEnlargedDTO updateTitle(String id, String title) {
-        accountsRepository.updateTitle(id, title);
+        if (id.isBlank() || title.isBlank()) throw new IllegalArgumentException("Blank fields");
         Account account = accountsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-" + id + " is not found. Title is not updated"));
+        accountsRepository.updateTitle(id, title);
+        account.setTitle(title);
         return new AccountEnlargedDTO(
                 account.getId(),
                 account.getTitle(),
@@ -118,6 +125,7 @@ public class AccountService {
             }
     )
     public AccountEnlargedDTO deleteAccount(String id) {
+        if (id.isBlank()) throw new IllegalArgumentException("Blank fields");
         Account account = accountsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account:id-" + id + " is not found. Account is not deleted"));
         accountsRepository.deleteById(id);

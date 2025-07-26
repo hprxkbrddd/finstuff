@@ -1,7 +1,9 @@
 package com.finstuff.repository.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.finstuff.repository.dto.*;
+import com.finstuff.repository.dto.AccountEnlargedDTO;
+import com.finstuff.repository.dto.NewAccountDTO;
+import com.finstuff.repository.dto.TitleUpdateDTO;
 import com.rabbitmq.client.Channel;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +28,17 @@ public class RabbitAccountConsumer {
     private final ObjectMapper objectMapper;
 
     @Value("${rabbitmq.acc.exchange}")
-    private String accExchange;
+    String accExchange;
 
     @Value("${rabbitmq.routing-key.rep-sec.new}")
-    private String rkNewRes;
+    String rkNewRes;
     @Value("${rabbitmq.routing-key.rep-sec.title-upd}")
-    private String rkUpdTitleRes;
+    String rkUpdTitleRes;
     @Value("${rabbitmq.routing-key.rep-sec.del}")
-    private String rkDelRes;
+    String rkDelRes;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    RabbitTemplate rabbitTemplate;
 
     @RabbitListener(queues = {"${rabbitmq.acc.queue.sec-rep.new}"})
     public void add(@Payload NewAccountDTO dto, Message msg, Channel channel) throws IOException {
@@ -116,7 +118,7 @@ public class RabbitAccountConsumer {
         }
     }
 
-    private void handleNotFoundException(
+    void handleNotFoundException(
             String accountId,
             Channel channel,
             Message msg,
@@ -138,7 +140,7 @@ public class RabbitAccountConsumer {
         log.info("\n!\nResponded to account {} message with 'null' response. Reason: not found\n!{}!\n", methodName, e.getMessage());
     }
 
-    private void handleIllegalArgumentException(
+    void handleIllegalArgumentException(
             Channel channel,
             Message msg,
             Exception e,

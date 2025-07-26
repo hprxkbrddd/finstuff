@@ -17,11 +17,11 @@ public interface TransactionsRepository extends JpaRepository<Transaction, Strin
 
     @Modifying
     @Query("UPDATE Transaction t SET t.title = :newValue WHERE t.id = :id")
-    int updateTitle(@Param("id") String id, @Param("newValue") String newValue);
+    void updateTitle(@Param("id") String id, @Param("newValue") String newValue);
 
     @Modifying
     @Query("UPDATE Transaction t SET t.amount = :newValue WHERE t.id = :id")
-    int updateAmount(@Param("id") String id, @Param("newValue") BigDecimal newValue);
+    void updateAmount(@Param("id") String id, @Param("newValue") BigDecimal newValue);
 
     Optional<List<Transaction>> findByAccountId(String accountId);
 }

@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class TransactionService {
 
     private final TransactionsRepository transactionsRepository;
+    private final IdGenerator idGenerator;
 
     // GET ALL TRANSACTIONS
     public AccountTransactionsDTO getAll() {
@@ -40,6 +41,7 @@ public class TransactionService {
     // GET TRANSACTION BY ID
     @Cacheable(value = "transaction", key = "#id")
     public TransactionEnlargedDTO getById(String id) {
+        if (id.isBlank()) throw new IllegalArgumentException("Blank fields");
         Transaction res = transactionsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction-id:" + id + " is not found."));
         return new TransactionEnlargedDTO(
@@ -54,6 +56,7 @@ public class TransactionService {
     // GET TRANSACTIONS OF THE ACCOUNT
     @Cacheable(value = "account_transactions", key = "#accountId")
     public AccountTransactionsDTO getByAccountId(String accountId) {
+        if (accountId.isBlank()) throw new IllegalArgumentException("Blank fields");
         List<Transaction> res = transactionsRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account-id:" + accountId + " either has no transactions or does not exist."));
         return new AccountTransactionsDTO(res.stream().map(
@@ -73,8 +76,10 @@ public class TransactionService {
     public TransactionEnlargedDTO add(String title,
                                       BigDecimal amount,
                                       String accountId) {
+        if (title.isBlank() || amount == null || amount.equals(BigDecimal.ZERO) || accountId.isBlank())
+            throw new IllegalArgumentException("Blank fields");
         Transaction transaction = new Transaction();
-        transaction.setId(IdGenerator.generateId());
+        transaction.setId(idGenerator.generateId());
         transaction.setTitle(title);
         transaction.setAmount(amount);
         transaction.setAccountId(accountId);
@@ -96,9 +101,11 @@ public class TransactionService {
             evict = @CacheEvict(value = "account_transactions", key = "#accountId")
     )
     public TransactionEnlargedDTO updateTitle(String id, String title) {
-        transactionsRepository.updateTitle(id, title);
+        if (id.isBlank() || title.isBlank()) throw new IllegalArgumentException("Blank fields");
         Transaction res = transactionsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction-id:" + id + " is not found."));
+        transactionsRepository.updateTitle(id, title);
+        res.setTitle(title);
         return new TransactionEnlargedDTO(
                 res.getId(),
                 res.getTitle(),
@@ -115,9 +122,12 @@ public class TransactionService {
             evict = @CacheEvict(value = "account_transactions", key = "#accountId")
     )
     public TransactionEnlargedDTO updateAmount(String id, BigDecimal amount) {
-        transactionsRepository.updateAmount(id, amount);
+        if (id.isBlank() || amount == null || amount.equals(BigDecimal.ZERO))
+            throw new IllegalArgumentException("Blank fields");
         Transaction res = transactionsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction-id:" + id + " is not found."));
+        transactionsRepository.updateAmount(id, amount);
+        res.setAmount(amount);
         return new TransactionEnlargedDTO(
                 res.getId(),
                 res.getTitle(),
@@ -136,6 +146,7 @@ public class TransactionService {
             }
     )
     public TransactionEnlargedDTO delete(String id) {
+        if (id.isBlank()) throw new IllegalArgumentException("Blank fields");
         Transaction res = transactionsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction-id:" + id + " is not found."));
         transactionsRepository.deleteById(id);
